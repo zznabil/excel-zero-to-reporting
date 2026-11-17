@@ -21,6 +21,8 @@ jobs:
       - run: npm ci --ignore-scripts --no-fund --no-audit
       - run: npx playwright install --with-deps chromium
       - run: npm test
+      - name: Bounded restore ownership diagnostic
+        run: node node_modules/@playwright/test/cli.js test --grep 'genuine backup' --repeat-each=20
       - run: npm run test:browser
       - run: npm run test:package
       - run: npm run package
