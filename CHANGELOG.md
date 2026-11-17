@@ -15,3 +15,4 @@
 - Tables and typed CSV import are taught before first use. A real Excel GUI import was saved, refreshed and reopened with text IDs preserved.
 - Disposable-copy recovery now proves the source binding with an isolated probe before moving and repairing it; the original report remains unchanged.
 - MIT licence for software and CC BY 4.0 for original educational content and synthetic data, with explicit third-party exclusions.
+- Restore/reset no longer depend on History API state changes. Restored state is saved before fragment navigation; import status is cleared while reading. A forced History rejection regression checks the restored lesson, practice tick and answer after reload, and success checks cannot match "not restored".
