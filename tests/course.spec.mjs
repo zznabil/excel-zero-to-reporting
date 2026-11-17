@@ -44,7 +44,7 @@ test('genuine backup download, restore, cancellation, foreign record and legacy 
   await open(page);await page.locator('#complete').check();await page.locator('input[name="answer"][value="1"]').check();await page.locator('#quiz-form button').click();
   const downloadPromise=page.waitForEvent('download');await page.locator('#export-progress').click();const download=await downloadPromise,file=testInfo.outputPath('downloaded-progress.json');await download.saveAs(file);const backup=JSON.parse(fs.readFileSync(file,'utf8'));expect(backup.format).toBe('excel-zero-to-reporting-public');expect(backup.state.completed).toEqual(['s01']);
   await page.locator('#complete').uncheck();await importBackup(page,testInfo,'cancel.json',backup,false);await expect(page.locator('#backup-status')).toContainText('cancelled');await expect(page.locator('#complete')).not.toBeChecked();
-  await importBackup(page,testInfo,'restore.json',backup,true);await expect(page.locator('#backup-status')).toContainText('restored');await page.reload();await expect(page.locator('#complete')).toBeChecked();
+  await importBackup(page,testInfo,'restore.json',backup,true);await expect(page.locator('#backup-status')).toHaveText('Progress restored and saved in this browser. Excel workbooks are unchanged.');await page.reload();await expect(page.locator('#complete')).toBeChecked();
   const before=await page.evaluate(k=>localStorage.getItem(k),key);
   await importBackup(page,testInfo,'foreign.json',{format:'cert-skills-progress',version:2,courseVersion:1,state:backup.state});await expect(page.locator('#backup-status')).toContainText('not restored');
   await importBackup(page,testInfo,'invalid.json',{...backup,state:{...backup.state,answers:{s01:99}}});await expect(page.locator('#backup-status')).toContainText('invalid');
@@ -103,4 +103,14 @@ test('wrong and omitted independent answers are rejected by the factual verifier
 });
 test('recovery probe is a usable two-line CSV, not an escaped display string',async({page})=>{
   await open(page,'s49');await expect(page.locator('#lesson-text pre')).toHaveText('Date,Product,Department,Units,UnitPrice\n2026-04-01,AP,IT,1,123');
+});
+test('restored progress and lesson survive reload when History API is unavailable',async({page},testInfo)=>{
+  await page.addInitScript(()=>{history.replaceState=()=>{throw new DOMException('History API unavailable for this file context.','SecurityError');};});
+  await open(page,'s03');
+  const restored={format:'excel-zero-to-reporting-public',version:1,state:{current:'s01',completed:['s01'],answers:{s01:lessons[0].quiz.correct}}};
+  await importBackup(page,testInfo,'history-denied.json',restored,true);
+  await expect(page.locator('#backup-status')).toHaveText('Progress restored and saved in this browser. Excel workbooks are unchanged.');
+  await expect(page).toHaveURL(/#s01$/);await expect(page.locator('#complete')).toBeChecked();
+  await page.reload();await expect(page.locator('#lesson-title')).toHaveText(lessons[0].title);await expect(page.locator('#complete')).toBeChecked();
+  await expect(page.locator(`input[name="answer"][value="${lessons[0].quiz.correct}"]`)).toBeChecked();await expect(page.locator('#quiz-progress')).toContainText('1 of 60');
 });

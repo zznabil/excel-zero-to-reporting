@@ -95,7 +95,12 @@
   }
   function go(id){if(!byId.has(id))return;if(location.hash==='#'+id)show(id);else location.hash=id;}
   function download(text,filename,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-  function use(next){state=next;damaged=null;history.replaceState(null,'','#'+state.current);show(state.current);}
+  function use(next){
+    state=next;damaged=null;
+    // Persist the restored state before fragment navigation; no History API is needed.
+    show(state.current);
+    if(location.hash&&location.hash!=='#'+state.current)go(state.current);
+  }
   function copy(text){
     const source=document.activeElement,y=window.scrollY;$('copy-text').value=text;$('copy-fallback').hidden=false;$('copy-text').focus();$('copy-text').select();let copied=false;try{copied=document.execCommand('copy');}catch(_){}
     if(copied){$('copy-fallback').hidden=true;source?.focus({preventScroll:true});window.scrollTo({top:y,behavior:'instant'});$('copy-status').textContent=text.startsWith('=')?`Copied formula. Paste into ${current.example.output} in Excel.`:'Copied starting data. Paste at A1. Set ID columns to Text first if leading zeros matter.';}else $('copy-status').textContent='Automatic copying was blocked. Press Ctrl+C to copy the selected text below.';
@@ -112,7 +117,7 @@
   $('theme').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').setAttribute('aria-pressed',String(dark));$('theme').textContent=dark?'Light theme':'Dark theme';});
   $('export-progress').disabled=false;$('import-progress').disabled=false;
   $('export-progress').addEventListener('click',()=>{download(JSON.stringify({format:courseId,version,state,exportedAt:new Date().toISOString()},null,2),'excel-public-progress-'+new Date().toISOString().slice(0,10)+'.json','application/json;charset=utf-8');$('backup-status').textContent='Backup sent to browser downloads. Excel workbooks are not included.';});
-  $('import-progress').addEventListener('change',async event=>{const input=event.target,file=input.files[0];if(!file)return;input.disabled=true;
+  $('import-progress').addEventListener('change',async event=>{const input=event.target,file=input.files[0];if(!file)return;input.disabled=true;$('backup-status').textContent='Reading backup...';
     try{if(file.size>128*1024)throw Error('Choose a backup smaller than 128 KiB.');const backup=JSON.parse(await file.text());if(backup.format!==courseId||backup.version!==version)throw Error('Choose a backup for this public edition. Old local-course backups remain usable only in the old course.');const next=validate(backup.state);
       if(!window.confirm(`Restore ${next.completed.length} practice ticks and ${Object.keys(next.answers).length} checked answers? This replaces only this public course's progress. Excel files and the old local course are unchanged.`)){$('backup-status').textContent='Restore cancelled. Current progress is unchanged.';return;}
       use(next);$('backup-status').textContent=storageBlocked?'Restored in memory only. Save a JSON backup before closing.':'Progress restored and saved in this browser. Excel workbooks are unchanged.';
