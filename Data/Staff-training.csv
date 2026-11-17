@@ -1,0 +1,7 @@
+BookingID,EmployeeID,Department,Course,Hours,Status,StartDate,DueDate
+B001,001,IT,Spreadsheet basics,4,Complete,2026-01-05,2026-01-12
+B002,002,HR,Spreadsheet basics,4,Complete,2026-01-05,2026-01-12
+B003,003,FINANCE,Data quality,6,Pending,2026-01-06,2026-01-20
+B004,001,IT,Data quality,6,Complete,2026-01-06,2026-01-20
+B005,004,HR,Report writing,3,Pending,2026-01-07,2026-01-21
+B006,002,HR,Report writing,3,Complete,2026-01-07,2026-01-21

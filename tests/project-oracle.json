@@ -1,0 +1,478 @@
+{
+  "status": "PASS",
+  "injectedFault": false,
+  "checks": [
+    {
+      "name": "truly empty ISBLANK",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "empty-text ISBLANK",
+      "actual": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "name": "empty-text equals empty string",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "COUNTBLANK includes empty formula",
+      "actual": 2,
+      "expected": 2,
+      "passed": true
+    },
+    {
+      "name": "COUNTA includes formula and space",
+      "actual": 2,
+      "expected": 2,
+      "passed": true
+    },
+    {
+      "name": "named input",
+      "actual": 50,
+      "expected": 50,
+      "passed": true
+    },
+    {
+      "name": "changed named input",
+      "actual": 80,
+      "expected": 80,
+      "passed": true
+    },
+    {
+      "name": "SUBTOTAL all visible",
+      "actual": 300,
+      "expected": 300,
+      "passed": true
+    },
+    {
+      "name": "SUM all rows",
+      "actual": 300,
+      "expected": 300,
+      "passed": true
+    },
+    {
+      "name": "SUBTOTAL after filter",
+      "actual": 250,
+      "expected": 250,
+      "passed": true
+    },
+    {
+      "name": "SUM not filtered",
+      "actual": 300,
+      "expected": 300,
+      "passed": true
+    },
+    {
+      "name": "109 excludes manually hidden",
+      "actual": 250,
+      "expected": 250,
+      "passed": true
+    },
+    {
+      "name": "9 includes manually hidden",
+      "actual": 300,
+      "expected": 300,
+      "passed": true
+    },
+    {
+      "name": "Goal Seek units",
+      "actual": 50,
+      "expected": 50,
+      "passed": true
+    },
+    {
+      "name": "Goal Seek residual",
+      "actual": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "name": "changed Goal Seek units",
+      "actual": 55,
+      "expected": 55,
+      "passed": true
+    },
+    {
+      "name": "freeze row",
+      "actual": 1,
+      "expected": 1,
+      "passed": true
+    },
+    {
+      "name": "freeze column",
+      "actual": 1,
+      "expected": 1,
+      "passed": true
+    },
+    {
+      "name": "valid list input",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "invalid pasted list input remains detectable",
+      "actual": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "name": "formula conditional-format rule",
+      "actual": 1,
+      "expected": 1,
+      "passed": true
+    },
+    {
+      "name": "office rows",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "name": "office total",
+      "actual": 1170,
+      "expected": 1170,
+      "passed": true
+    },
+    {
+      "name": "HR closed total",
+      "actual": 320,
+      "expected": 320,
+      "passed": true
+    },
+    {
+      "name": "native wildcard SUMIFS",
+      "actual": 1170,
+      "expected": 1170,
+      "passed": true
+    },
+    {
+      "name": "booking rows",
+      "actual": 6,
+      "expected": 6,
+      "passed": true
+    },
+    {
+      "name": "booking hours",
+      "actual": 26,
+      "expected": 26,
+      "passed": true
+    },
+    {
+      "name": "distinct employees",
+      "actual": 4,
+      "expected": 4,
+      "passed": true
+    },
+    {
+      "name": "completed booking hours",
+      "actual": 17,
+      "expected": 17,
+      "passed": true
+    },
+    {
+      "name": "leading-zero employee ID",
+      "actual": "001",
+      "expected": "001",
+      "passed": true
+    },
+    {
+      "name": "document prefix",
+      "actual": "FIN",
+      "expected": "FIN",
+      "passed": true
+    },
+    {
+      "name": "document year",
+      "actual": "2026",
+      "expected": "2026",
+      "passed": true
+    },
+    {
+      "name": "document sequence preserves zero",
+      "actual": "014",
+      "expected": "014",
+      "passed": true
+    },
+    {
+      "name": "document character count",
+      "actual": 12,
+      "expected": 12,
+      "passed": true
+    },
+    {
+      "name": "band 0.59",
+      "actual": "Review",
+      "expected": "Review",
+      "passed": true
+    },
+    {
+      "name": "band 0.6",
+      "actual": "Pass",
+      "expected": "Pass",
+      "passed": true
+    },
+    {
+      "name": "band 0.79",
+      "actual": "Pass",
+      "expected": "Pass",
+      "passed": true
+    },
+    {
+      "name": "band 0.8",
+      "actual": "Strong",
+      "expected": "Strong",
+      "passed": true
+    },
+    {
+      "name": "initial sales rows",
+      "actual": 6,
+      "expected": 6,
+      "passed": true
+    },
+    {
+      "name": "initial sales units",
+      "actual": 11,
+      "expected": 11,
+      "passed": true
+    },
+    {
+      "name": "initial sales revenue",
+      "actual": 10200,
+      "expected": 10200,
+      "passed": true
+    },
+    {
+      "name": "initial sales Pivot",
+      "actual": 10200,
+      "expected": 10200,
+      "passed": true
+    },
+    {
+      "name": "refreshed sales rows",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "name": "refreshed sales units",
+      "actual": 13,
+      "expected": 13,
+      "passed": true
+    },
+    {
+      "name": "refreshed sales revenue",
+      "actual": 12500,
+      "expected": 12500,
+      "passed": true
+    },
+    {
+      "name": "stale Pivot demonstrably not new total",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "refreshed sales Pivot",
+      "actual": 12500,
+      "expected": 12500,
+      "passed": true
+    },
+    {
+      "name": "copied workbook initially still points at original source",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "rebound copy initial total",
+      "actual": 12500,
+      "expected": 12500,
+      "passed": true
+    },
+    {
+      "name": "copy-only probe rows",
+      "actual": 9,
+      "expected": 9,
+      "passed": true
+    },
+    {
+      "name": "copy-only probe units",
+      "actual": 14,
+      "expected": 14,
+      "passed": true
+    },
+    {
+      "name": "copy-only probe total",
+      "actual": 12623,
+      "expected": 12623,
+      "passed": true
+    },
+    {
+      "name": "probe not written into original folder",
+      "actual": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "name": "original stays at eight rows",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "name": "original stays at thirteen units",
+      "actual": 13,
+      "expected": 13,
+      "passed": true
+    },
+    {
+      "name": "original total unchanged after fresh refresh",
+      "actual": 12500,
+      "expected": 12500,
+      "passed": true
+    },
+    {
+      "name": "moved disposable source failure detected",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "repaired copy rows",
+      "actual": 9,
+      "expected": 9,
+      "passed": true
+    },
+    {
+      "name": "repaired copy units",
+      "actual": 14,
+      "expected": 14,
+      "passed": true
+    },
+    {
+      "name": "repaired copy total",
+      "actual": 12623,
+      "expected": 12623,
+      "passed": true
+    },
+    {
+      "name": "reopened recovered copy remains independently bound",
+      "actual": 12623,
+      "expected": 12623,
+      "passed": true
+    },
+    {
+      "name": "initial asset records",
+      "actual": 12,
+      "expected": 12,
+      "passed": true
+    },
+    {
+      "name": "initial devices",
+      "actual": 15,
+      "expected": 15,
+      "passed": true
+    },
+    {
+      "name": "initial acquisition value",
+      "actual": 15000,
+      "expected": 15000,
+      "passed": true
+    },
+    {
+      "name": "initial asset Pivot",
+      "actual": 15000,
+      "expected": 15000,
+      "passed": true
+    },
+    {
+      "name": "refreshed asset records",
+      "actual": 15,
+      "expected": 15,
+      "passed": true
+    },
+    {
+      "name": "refreshed devices",
+      "actual": 19,
+      "expected": 19,
+      "passed": true
+    },
+    {
+      "name": "refreshed acquisition value",
+      "actual": 17700,
+      "expected": 17700,
+      "passed": true
+    },
+    {
+      "name": "refreshed asset Pivot",
+      "actual": 17700,
+      "expected": 17700,
+      "passed": true
+    },
+    {
+      "name": "A015 missing owner",
+      "actual": "Missing owner",
+      "expected": "Missing owner",
+      "passed": true
+    },
+    {
+      "name": "only one missing owner",
+      "actual": 1,
+      "expected": 1,
+      "passed": true
+    },
+    {
+      "name": "chart has four department values",
+      "actual": 4,
+      "expected": 4,
+      "passed": true
+    },
+    {
+      "name": "chart values reconcile after refresh",
+      "actual": 17700,
+      "expected": 17700,
+      "passed": true
+    },
+    {
+      "name": "print area contains chart right edge",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "print area contains chart bottom edge",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "reopened capstone value",
+      "actual": 17700,
+      "expected": 17700,
+      "passed": true
+    },
+    {
+      "name": "reopened original sales Pivot remains unchanged",
+      "actual": 12500,
+      "expected": 12500,
+      "passed": true
+    },
+    {
+      "name": "readable report PDF exists",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    }
+  ],
+  "error": null,
+  "environment": "Microsoft 365 desktop Excel on Windows",
+  "reopened": true,
+  "verifierSha256": "70bae30e830dd61d7da178643d7083ce9577699f5e09e5eb5fed6f3cddca4611"
+}

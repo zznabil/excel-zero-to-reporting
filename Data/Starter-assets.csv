@@ -1,0 +1,13 @@
+AssetID,Device,Department,PurchaseDate,RenewalDate,Quantity,UnitCost,Status,Owner
+A001,Laptop,IT,2025-02-10,2026-12-10,1,2800,In use,Alex
+A002,Monitor,Operations,2025-03-18,2026-11-30,1,1200,In use,Blair
+A003,Access point,IT,2025-04-05,2027-04-05,2,650,In use,Casey
+A004,Laptop,Finance,2025-05-20,2026-11-10,1,2400,In use,Dana
+A005,Printer,HR,2025-06-15,2026-12-15,1,400,In use,Eli
+A006,Desktop,Operations,2025-07-08,2027-07-08,1,1800,In use,Frankie
+A007,Switch,IT,2025-08-12,2026-11-20,1,500,Spare,Gray
+A008,Monitor,Finance,2025-09-03,2027-09-03,1,900,In use,Harper
+A009,Phone,HR,2025-10-11,2026-11-25,3,350,In use,Indigo
+A010,Printer,Operations,2025-11-19,2026-12-19,1,600,Spare,Jules
+A011,Router,IT,2026-01-07,2027-01-07,1,1300,In use,Kai
+A012,Monitor,HR,2026-02-14,2027-02-14,1,750,In use,Lee

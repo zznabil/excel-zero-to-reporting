@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-11-17",
+  "decision": "Adopt high-value teaching patterns and spreadsheet skills as original beginner-to-reporting content, not third-party copies or an exam dump.",
+  "taxonomy": [
+    "orientation",
+    "entry-and-types",
+    "references-and-arithmetic",
+    "conditional-reporting",
+    "text-cleaning",
+    "lookups-and-reconciliation",
+    "tables-validation-and-formatting",
+    "pivots-and-charts",
+    "import-and-refresh",
+    "documentation-and-projects",
+    "optional-mos-associate",
+    "optional-mos-expert"
+  ],
+  "sampling": {
+    "unit": "page",
+    "method": "Read all seven requested landing pages; rank linked pages by beginner relevance, missing coverage, practical transfer and technical/rights risk. Inspect selected deep pages and live practice. Not an exhaustive crawl of every article or exercise.",
+    "cap": "Up to five targeted inner pages per requested source, plus official checks; expand only to resolve a material contradiction.",
+    "remainder": "Unselected catalogue pages, downloadable answers, paid courses, accounts and exam question banks are not individually reviewed."
+  },
+  "sources": [
+    {
+      "id": "w3schools",
+      "url": "https://www.w3schools.com/excel/",
+      "status": "landing-and-relay-inspected",
+      "pages": [
+        "https://www.w3schools.com/excel/",
+        "https://www.w3schools.com/excel/tryexcel.php?filename=demo_move_cells",
+        "https://www.w3schools.com/excel/excel_exercises.php",
+        "https://www.w3schools.com/about/about_copyright.asp"
+      ],
+      "adopt": [
+        "Text-first topics, visible examples, reset, copy data, immediate question feedback, free previous/next navigation",
+        "Keep reference separate from a linear path"
+      ],
+      "exclude": [
+        "Branding, copied text/images and proprietary sample data",
+        "Account-dependent streaks and certification marketing"
+      ],
+      "rights": "No redistribution licence established; original implementation and source links only",
+      "confidence": "high for observed UI, no controlled learning-outcome claim"
+    },
+    {
+      "id": "practice-online",
+      "url": "https://excel-practice-online.com/",
+      "status": "landing-and-two-inner-pages-inspected",
+      "pages": [
+        "https://excel-practice-online.com/",
+        "https://excel-practice-online.com/tools/excel-self-assessment-test/",
+        "https://excel-practice-online.com/functions/textbefore_textafter/"
+      ],
+      "adopt": [
+        "Explanation followed immediately by active practice",
+        "Explicit delimiter and missing-delimiter cases",
+        "Starting assessment with actionable remediation, not a global expert label"
+      ],
+      "exclude": [
+        "Embedded OneDrive as required runtime",
+        "Unverified blanket function-version claims",
+        "Repackaged exercise workbooks"
+      ],
+      "rights": "Original tasks and data only; link to optional site practice",
+      "liveObservation": "TEXTBEFORE/TEXTAFTER practice iframe area rendered blank in current relay; download link visible. Cause not established. Do not claim universal site failure.",
+      "confidence": "high for content and this session's visible blank embed"
+    },
+    {
+      "id": "excel-easy",
+      "url": "https://www.excel-easy.com/",
+      "status": "landing-and-two-inner-pages-inspected",
+      "pages": [
+        "https://www.excel-easy.com/",
+        "https://www.excel-easy.com/examples/if-cell-is-blank.html",
+        "https://www.excel-easy.com/examples/goal-seek.html"
+      ],
+      "adopt": [
+        "Small single-purpose examples",
+        "Goal Seek: target formula, one changeable input, approximate result and cancellation/failure",
+        "Blank versus empty-string distinction"
+      ],
+      "exclude": [
+        "Treating ISBLANK and =\"\" as universally equivalent",
+        "Changing global iteration settings as a beginner default",
+        "Broad VBA/Solver detours before reporting skills"
+      ],
+      "rights": "Original prose/data; no copied illustrations",
+      "contradiction": "Blank-cell page says exact same result but its own note distinguishes a formula returning empty text. Native Excel probe required for adopted teaching.",
+      "confidence": "high for observed page conflict; native confirmation pending"
+    },
+    {
+      "id": "geeksforgeeks",
+      "url": "https://www.geeksforgeeks.org/excel/excel-tutorial/",
+      "status": "landing-and-two-inner-pages-inspected",
+      "pages": [
+        "https://www.geeksforgeeks.org/excel/excel-tutorial/",
+        "https://www.geeksforgeeks.org/excel/text-modifications-with-power-query-in-excel/",
+        "https://www.geeksforgeeks.org/excel/how-to-create-a-relative-file-path-with-power-query-in-excel/"
+      ],
+      "adopt": [
+        "Record repeatable cleaning in Applied Steps",
+        "Explicit source-path recovery when moving a workbook"
+      ],
+      "exclude": [
+        "Power View and ActiveX detours",
+        "Automatic name capitalisation as identity correction",
+        "Copying malformed quoted M code or unexplained C2/C3 address mismatch",
+        "CELL(\"filepath\") claim: the worked formula actually uses filename"
+      ],
+      "rights": "Original lessons only; no copied article screenshots",
+      "confidence": "high for read page details; native refresh/move probe pending"
+    },
+    {
+      "id": "wise-owl",
+      "url": "https://www.wiseowl.co.uk/excel/exercises/standard/",
+      "status": "landing-and-one-inner-page-inspected",
+      "pages": [
+        "https://www.wiseowl.co.uk/excel/exercises/standard/",
+        "https://www.wiseowl.co.uk/excel/exercises/standard/creating-formulae/4871/"
+      ],
+      "adopt": [
+        "Difficulty labels",
+        "Independent business scenario after guided instruction",
+        "Attempt before revealing an answer and save a named deliverable"
+      ],
+      "exclude": [
+        "All redistributed Wise Owl tasks, model answers, files, screenshots and copied numeric scenarios"
+      ],
+      "rights": "Site and exercise explicitly require prior written permission for reproduction in whole or part; link-only references",
+      "confidence": "high"
+    },
+    {
+      "id": "mo210",
+      "url": "https://open-exam-prep.com/study-guides/mo-210",
+      "status": "landing-and-one-inner-page-inspected",
+      "pages": [
+        "https://open-exam-prep.com/study-guides/mo-210",
+        "https://open-exam-prep.com/study-guides/mo-210/import-and-navigate/import-text-files"
+      ],
+      "adopt": [
+        "Objective-linked reference checklist",
+        "Import preview: delimiter, headers, ID type and destination",
+        "Short retrieval checks after a topic"
+      ],
+      "exclude": [
+        "Claim that Power Query merge/custom transforms belong to MO-211 exam scope: official expert outline does not list them",
+        "Treating multiple-choice knowledge checks as performance-exam mastery"
+      ],
+      "rights": "Use official objective facts and original teaching; no copied question bank",
+      "confidence": "high for official scope comparison"
+    },
+    {
+      "id": "mo211",
+      "url": "https://open-exam-prep.com/study-guides/mo-211",
+      "status": "landing-inspected-official-crosscheck",
+      "pages": [
+        "https://open-exam-prep.com/study-guides/mo-211",
+        "https://open-exam-prep.com/study-guides/mo-211/date-time-text-auditing/current-date-weekday-functions"
+      ],
+      "adopt": [
+        "Optional advanced route after job-oriented reporting core",
+        "Formula auditing, LET, PMT and Goal Seek as later applied skills"
+      ],
+      "exclude": [
+        "Does-not-expire claim",
+        "Guaranteed expert status from a short hour estimate",
+        "Mandatory macro enabling for beginners",
+        "Claim of full MO-211 coverage without macro/collaboration/chart objectives"
+      ],
+      "rights": "Reference only; original examples and official scope facts",
+      "contradiction": "Microsoft Learn specifies 60-month renewal and Certiport says MOS earned after 23 September 2025 has five-year expiry. Earlier credentials are unaffected.",
+      "confidence": "high for verified policy contradiction"
+    }
+  ],
+  "authorities": [
+    {
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-associate-m365-apps/",
+      "observed": "60-month renewal; approximately 150 hours recommended instruction and hands-on experience; 50-minute assessment"
+    },
+    {
+      "url": "https://arch-center.azureedge.net/Learning/Credentials/microsoft-certified-security-operations-analyst-skills-measured.pdf",
+      "observed": "Despite misleading filename, document title and contents are MO-210 Excel skills; five domains and weights verified"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-expert-m365-apps/",
+      "observed": "60-month renewal; advanced certification, not beginner starting point"
+    },
+    {
+      "url": "https://arch-center.azureedge.net/Learning/Credentials/MO-211_OD_MOS365_ExcelExpert.pdf",
+      "observed": "Four domains: workbook options/settings 10–15%; data 30–35%; advanced formulas/macros 25–30%; advanced charts/tables 25–30%. Includes macros, PMT/NPER, Goal Seek/Scenario Manager. Does not list Power Query as an objective."
+    },
+    {
+      "url": "https://certiport.pearsonvue.com/Educator-resources/Exam-policies/Certification-expiration.aspx",
+      "observed": "Rendered relay page confirms MOS five-year expiry after 23 September 2025; prior credentials unaffected. Static reader extracted no body."
+    }
+  ],
+  "pending": [],
+  "coverage": {
+    "sourceGroups": 7,
+    "selectedSourcePages": 19,
+    "primaryReferences": 5,
+    "exhaustive": false
+  },
+  "liveLimits": [
+    "W3Schools Tryit sheet rendered; editing not fully exercised.",
+    "Excel Practice Online selected embed area was blank in this relay session; its download link remained visible.",
+    "OpenExamPrep question controls rendered; click blocked by overlay, subsequent snapshot timed out. Not accepted as a completed third-party question journey.",
+    "Certiport expiry policy body verified in rendered relay page."
+  ],
+  "adoption": {
+    "w3schools": [
+      "all lessons",
+      "x01",
+      "x03",
+      "x04"
+    ],
+    "practice-online": [
+      "s33",
+      "x05"
+    ],
+    "excel-easy": [
+      "x02",
+      "x09"
+    ],
+    "geeksforgeeks": [
+      "s43",
+      "s44",
+      "s45",
+      "s49"
+    ],
+    "wise-owl": [
+      "s07",
+      "s12",
+      "s16",
+      "s24",
+      "s29",
+      "s41",
+      "s48"
+    ],
+    "mo210": [
+      "x01",
+      "x03",
+      "x04",
+      "s43"
+    ],
+    "mo211": [
+      "x07",
+      "x08",
+      "x09"
+    ]
+  }
+}
