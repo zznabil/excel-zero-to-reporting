@@ -40,15 +40,14 @@ test('all lessons: native results, edits, reset, feedback, navigation and persis
 });
 test('genuine backup download, restore, cancellation, foreign record and legacy isolation',async({page},testInfo)=>{
   const legacy=JSON.stringify({current:'s02',completed:['s01'],positions:{s02:225},answers:{s01:1}});
-  await page.addInitScript(({key,oldKey,legacy})=>{window.__courseProgressAtBoot=localStorage.getItem(key);if(localStorage.getItem(oldKey)===null)localStorage.setItem(oldKey,legacy);},{key,oldKey,legacy});
+  await page.addInitScript(({key,oldKey,legacy})=>{if(localStorage.getItem(oldKey)===null)localStorage.setItem(oldKey,legacy);const get=Storage.prototype.getItem;Storage.prototype.getItem=function(k){const value=get.call(this,k);if(k===key&&!Object.hasOwn(window,'__courseProgressAtBoot'))window.__courseProgressAtBoot=value;return value;};},{key,oldKey,legacy});
   await open(page);await page.locator('#complete').check();await page.locator('input[name="answer"][value="1"]').check();await page.locator('#quiz-form button').click();
   const downloadPromise=page.waitForEvent('download');await page.locator('#export-progress').click();const download=await downloadPromise,file=testInfo.outputPath('downloaded-progress.json');await download.saveAs(file);const backup=JSON.parse(fs.readFileSync(file,'utf8'));expect(backup.format).toBe('excel-zero-to-reporting-public');expect(backup.state.completed).toEqual(['s01']);
   await page.locator('#complete').uncheck();await importBackup(page,testInfo,'cancel.json',backup,false);await expect(page.locator('#backup-status')).toContainText('cancelled');await expect(page.locator('#complete')).not.toBeChecked();
   await importBackup(page,testInfo,'restore.json',backup,true);await expect(page.locator('#backup-status')).toHaveText('Progress restored and saved in this browser. Excel workbooks are unchanged.');
-  const snapshot=()=>page.evaluate(k=>({url:location.href,boot:window.__courseProgressAtBoot,stored:localStorage.getItem(k),checked:document.getElementById('complete').checked,lesson:document.querySelector('[aria-current="page"]')?.dataset.session,status:document.getElementById('backup-status').textContent}),key);
-  const beforeReload=await snapshot();await page.reload();const afterReload=await snapshot();
-  console.log('RESTORE_RELOAD_DIAGNOSTIC',JSON.stringify({beforeReload,afterReload}));
-  await expect(page.locator('#complete')).toBeChecked();
+  await page.reload();
+  try{await expect(page.locator('#complete')).toBeChecked();}
+  catch(error){console.log('RESTORE_RELOAD_FAILURE',JSON.stringify(await page.evaluate(k=>({url:location.href,boot:window.__courseProgressAtBoot,stored:localStorage.getItem(k),checked:document.getElementById('complete').checked,lesson:document.querySelector('[aria-current="page"]')?.dataset.session,progress:document.getElementById('progress').value}),key)));throw error;}
   const before=await page.evaluate(k=>localStorage.getItem(k),key);
   await importBackup(page,testInfo,'foreign.json',{format:'cert-skills-progress',version:2,courseVersion:1,state:backup.state});await expect(page.locator('#backup-status')).toContainText('not restored');
   await importBackup(page,testInfo,'invalid.json',{...backup,state:{...backup.state,answers:{s01:99}}});await expect(page.locator('#backup-status')).toContainText('invalid');
