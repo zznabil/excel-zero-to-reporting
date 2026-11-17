@@ -1,0 +1,108 @@
+{
+  "status": "PASS",
+  "origin": "Real desktop Excel GUI: From Text/CSV, Transform Data, delete automatic Changed Type, set Text/numeric/date types, Close and Load to Table, Refresh All, native Save As",
+  "checks": [
+    {
+      "name": "GUI saved load text ID row 2",
+      "passed": true
+    },
+    {
+      "name": "GUI saved load text ID row 3",
+      "passed": true
+    },
+    {
+      "name": "GUI saved load text ID row 4",
+      "passed": true
+    },
+    {
+      "name": "GUI saved load text ID row 5",
+      "passed": true
+    },
+    {
+      "name": "GUI saved load text ID row 6",
+      "passed": true
+    },
+    {
+      "name": "GUI saved load text ID row 7",
+      "passed": true
+    },
+    {
+      "name": "GUI saved load first start date is numeric 5 January",
+      "passed": true
+    },
+    {
+      "name": "actual loaded Table contains six records",
+      "passed": true
+    },
+    {
+      "name": "refreshed text ID row 2",
+      "passed": true
+    },
+    {
+      "name": "refreshed text ID row 3",
+      "passed": true
+    },
+    {
+      "name": "refreshed text ID row 4",
+      "passed": true
+    },
+    {
+      "name": "refreshed text ID row 5",
+      "passed": true
+    },
+    {
+      "name": "refreshed text ID row 6",
+      "passed": true
+    },
+    {
+      "name": "refreshed text ID row 7",
+      "passed": true
+    },
+    {
+      "name": "refreshed first start date is numeric 5 January",
+      "passed": true
+    },
+    {
+      "name": "numeric 1 can look like 001",
+      "passed": true
+    },
+    {
+      "name": "numeric 1 is rejected despite identical display",
+      "passed": true
+    },
+    {
+      "name": "stripped then converted text 1 is rejected",
+      "passed": true
+    },
+    {
+      "name": "reopened text ID row 2",
+      "passed": true
+    },
+    {
+      "name": "reopened text ID row 3",
+      "passed": true
+    },
+    {
+      "name": "reopened text ID row 4",
+      "passed": true
+    },
+    {
+      "name": "reopened text ID row 5",
+      "passed": true
+    },
+    {
+      "name": "reopened text ID row 6",
+      "passed": true
+    },
+    {
+      "name": "reopened text ID row 7",
+      "passed": true
+    },
+    {
+      "name": "reopened first start date is numeric 5 January",
+      "passed": true
+    }
+  ],
+  "error": null,
+  "verifierSha256": "160bb680069621a4e15685fcb9ddc1717bb39bce353cb11d2788defe03b9b433"
+}

@@ -1,0 +1,4 @@
+AssetID,Device,Department,PurchaseDate,RenewalDate,Quantity,UnitCost,Status,Owner
+A013,Monitor,Operations,2026-11-17,2027-11-17,1,800,In use,Morgan
+A014,Phone,IT,2026-11-17,2027-11-17,2,450,In use,Nico
+A015,Laptop,HR,2026-11-17,2027-11-17,1,1000,In use,

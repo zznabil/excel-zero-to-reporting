@@ -1,0 +1,9 @@
+RequestID,Department,Status,Description,Amount,RequestedDate
+R001,IT,Closed,Keyboard replacement,120,2026-01-05
+R002,HR,Open,Training stationery,80,2026-01-06
+R003,FINANCE,Closed,Document binding,150,2026-01-07
+R004,IT,Open,Access point stock,350,2026-01-08
+R005,HR,Closed,Workshop materials,200,2026-01-09
+R006,FINANCE,Open,Invoice archive boxes,100,2026-01-12
+R007,IT,Closed,Patch cables,50,2026-01-13
+R008,HR,Closed,Course printing,120,2026-01-14

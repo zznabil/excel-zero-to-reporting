@@ -1,0 +1,943 @@
+{
+  "sourceHashes": {
+    "lessons.js": "5dc8302d0a9a9a4298195715d7dcc8790eb8eae448047d2aa853a070d7d59f63",
+    "demos.js": "6e65d57090abae36e27bb48a0a92a6cb336d588ab879ba3add6f6b07427face2"
+  },
+  "environment": {
+    "application": "Microsoft Excel",
+    "version": "16.0",
+    "build": 20527,
+    "platform": "Windows",
+    "reopened": true
+  },
+  "cases": [
+    {
+      "id": "s01",
+      "formula": "=A2*B2",
+      "base": [
+        [
+          700
+        ]
+      ],
+      "changed": [
+        [
+          1050
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s02",
+      "formula": "=A1+A2",
+      "base": [
+        [
+          5
+        ]
+      ],
+      "changed": [
+        [
+          10
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s03",
+      "formula": "=A2",
+      "base": [
+        [
+          12.345
+        ]
+      ],
+      "changed": [
+        [
+          12.346
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s04",
+      "formula": "=COUNTA(A2:A4)",
+      "base": [
+        [
+          3
+        ]
+      ],
+      "changed": [
+        [
+          2
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x01",
+      "formula": "=SUM(A2:A3)",
+      "base": [
+        [
+          200
+        ]
+      ],
+      "changed": [
+        [
+          230
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x02",
+      "formula": "=COUNTBLANK(A2:A4)",
+      "base": [
+        [
+          1
+        ]
+      ],
+      "changed": [
+        [
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s05",
+      "formula": "=SUM(A2:A3)/$B$2",
+      "base": [
+        [
+          0.5
+        ]
+      ],
+      "changed": [
+        [
+          0.6666666666666666
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x03",
+      "formula": "=A2*$B$2",
+      "base": [
+        [
+          50
+        ]
+      ],
+      "changed": [
+        [
+          80
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s06",
+      "formula": "=XLOOKUP(D2,A2:A4,B2:B4,\"No band\",-1)",
+      "base": [
+        [
+          "Pass"
+        ]
+      ],
+      "changed": [
+        [
+          "Strong"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s07",
+      "formula": "=SUM(A2:A4)+B2",
+      "base": [
+        [
+          650
+        ]
+      ],
+      "changed": [
+        [
+          675
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s08",
+      "formula": "=SUMIFS(B2:B5,A2:A5,D2)",
+      "base": [
+        [
+          1650
+        ]
+      ],
+      "changed": [
+        [
+          800
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s09",
+      "formula": "=\"Department: \"&A2",
+      "base": [
+        [
+          "Department: IT"
+        ]
+      ],
+      "changed": [
+        [
+          "Department: Finance"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s10",
+      "formula": "=COUNTIFS(A2:A5,D2,B2:B5,\">=\"&E2)",
+      "base": [
+        [
+          2
+        ]
+      ],
+      "changed": [
+        [
+          1
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s11",
+      "formula": "=SUM(--(((A2:A5=\"IT\")+(B2:B5>=1000))>0))",
+      "base": [
+        [
+          3
+        ]
+      ],
+      "changed": [
+        [
+          4
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s12",
+      "formula": "=SUMIFS(C2:C5,A2:A5,E2,B2:B5,F2)",
+      "base": [
+        [
+          1300
+        ]
+      ],
+      "changed": [
+        [
+          700
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s13",
+      "formula": "=A2*B2",
+      "base": [
+        [
+          30
+        ]
+      ],
+      "changed": [
+        [
+          50
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s14",
+      "formula": "=ROUND(A2*B2,2)",
+      "base": [
+        [
+          3.71
+        ]
+      ],
+      "changed": [
+        [
+          3.71
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s15",
+      "formula": "=ROUND(A2:B3*A6:B6,2)",
+      "base": [
+        [
+          10,
+          40
+        ],
+        [
+          30,
+          80
+        ]
+      ],
+      "changed": [
+        [
+          10,
+          50
+        ],
+        [
+          30,
+          100
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s16",
+      "formula": "=SUM(ROUND(A2:A3,2))",
+      "base": [
+        [
+          2.46
+        ]
+      ],
+      "changed": [
+        [
+          2.4699999999999998
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s17",
+      "formula": "=NETWORKDAYS.INTL(DATE(2024,1,1),DATE(2024,1,A2),1)",
+      "base": [
+        [
+          5
+        ]
+      ],
+      "changed": [
+        [
+          6
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s18",
+      "formula": "=EOMONTH(DATE(2024,1,15),A2)",
+      "base": [
+        [
+          45351
+        ]
+      ],
+      "changed": [
+        [
+          45382
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s19",
+      "formula": "=MOD(TIMEVALUE(B2)-TIMEVALUE(A2),1)*24",
+      "base": [
+        [
+          8
+        ]
+      ],
+      "changed": [
+        [
+          9.5
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s20",
+      "formula": "=DATE(2024,1,A2)-DATE(2024,1,1)+1",
+      "base": [
+        [
+          10
+        ]
+      ],
+      "changed": [
+        [
+          11
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s21",
+      "formula": "=IF(A2>B2,\"Review\",\"Within limit\")",
+      "base": [
+        [
+          "Review"
+        ]
+      ],
+      "changed": [
+        [
+          "Within limit"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s22",
+      "formula": "=IF(AND(A2>=60,B2>=3.5),\"Eligible\",\"Not eligible\")",
+      "base": [
+        [
+          "Eligible"
+        ]
+      ],
+      "changed": [
+        [
+          "Not eligible"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s23",
+      "formula": "=IFNA(XLOOKUP(D2,A2:A4,B2:B4),\"Missing ID\")",
+      "base": [
+        [
+          "Missing ID"
+        ]
+      ],
+      "changed": [
+        [
+          2200
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s24",
+      "formula": "=IFS(A2>=80,\"Strong\",A2>=60,\"Pass\",TRUE,\"Review\")",
+      "base": [
+        [
+          "Pass"
+        ]
+      ],
+      "changed": [
+        [
+          "Strong"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s25",
+      "formula": "=XLOOKUP(D2,A2:A4,B2:B4,\"Missing ID\")",
+      "base": [
+        [
+          350
+        ]
+      ],
+      "changed": [
+        [
+          2200
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s26",
+      "formula": "=XLOOKUP(D2,A2:A4,B2:B4,\"No band\",-1)",
+      "base": [
+        [
+          "Medium"
+        ]
+      ],
+      "changed": [
+        [
+          "High"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s27",
+      "formula": "=XLOOKUP(D2,A2:A4,B2:B4,\"No match\",0,-1)",
+      "base": [
+        [
+          "Chen"
+        ]
+      ],
+      "changed": [
+        [
+          "Bo"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s28",
+      "formula": "=FILTER(A2:C4,B2:B4=E2,\"No matches\")",
+      "base": [
+        [
+          "Alex",
+          "IT",
+          350
+        ],
+        [
+          "Chen",
+          "IT",
+          450
+        ]
+      ],
+      "changed": [
+        [
+          "Bo",
+          "HR",
+          800
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s29",
+      "formula": "=A2*XLOOKUP(B2,D2:D4,E2:E4)",
+      "base": [
+        [
+          2.4
+        ]
+      ],
+      "changed": [
+        [
+          3.5999999999999996
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s30",
+      "formula": "=$A2*B$1",
+      "base": [
+        [
+          10
+        ]
+      ],
+      "changed": [
+        [
+          15
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s31",
+      "formula": "=(A2+B2)*C2",
+      "base": [
+        [
+          20
+        ]
+      ],
+      "changed": [
+        [
+          25
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s32",
+      "formula": "=[@Quantity]*[@UnitCost]",
+      "base": [
+        [
+          700
+        ]
+      ],
+      "changed": [
+        [
+          1050
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x04",
+      "formula": "=SUBTOTAL(109,B2:B4)",
+      "base": [
+        [
+          300
+        ]
+      ],
+      "changed": [
+        [
+          330
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s33",
+      "formula": "=XLOOKUP(--TEXTBEFORE(A2,\":\"),D2:D4,E2:E4,\"Unknown\")",
+      "base": [
+        [
+          47.25
+        ]
+      ],
+      "changed": [
+        [
+          29.75
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x05",
+      "formula": "=LEFT(A2,3)",
+      "base": [
+        [
+          "FIN"
+        ]
+      ],
+      "changed": [
+        [
+          "HRM"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s34",
+      "formula": "=FILTER(A2:A4,ISNA(XMATCH(A2:A4,C2:C3)),\"None\")",
+      "base": [
+        [
+          "Switch"
+        ]
+      ],
+      "changed": [
+        [
+          "Laptop"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s35",
+      "formula": "=IF(VALUE(A2)>VALUE(B2),\"Win\",\"Not win\")",
+      "base": [
+        [
+          "Win"
+        ]
+      ],
+      "changed": [
+        [
+          "Not win"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s36",
+      "formula": "=SORT(UNIQUE(A2:A5))",
+      "base": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ],
+        [
+          "Chen"
+        ]
+      ],
+      "changed": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s37",
+      "formula": "=--TEXTBEFORE(A2,\":\")",
+      "base": [
+        [
+          7204
+        ]
+      ],
+      "changed": [
+        [
+          7306
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s38",
+      "formula": "=ROUND(A2*B2+C2*D2,2)",
+      "base": [
+        [
+          230
+        ]
+      ],
+      "changed": [
+        [
+          280
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s39",
+      "formula": "=SUMIFS(B2:B4,A2:A4,D2)",
+      "base": [
+        [
+          1450
+        ]
+      ],
+      "changed": [
+        [
+          800
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s40",
+      "formula": "=COUNTIF(A2:A5,C2)/COUNTA(A2:A5)",
+      "base": [
+        [
+          0.75
+        ]
+      ],
+      "changed": [
+        [
+          1
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s41",
+      "formula": "=AVERAGEIFS(B2:B5,A2:A5,D2)",
+      "base": [
+        [
+          200
+        ]
+      ],
+      "changed": [
+        [
+          1000
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x06",
+      "formula": "=SUMPRODUCT(A2:A3,B2:B3)/SUM(B2:B3)",
+      "base": [
+        [
+          18
+        ]
+      ],
+      "changed": [
+        [
+          15
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s42",
+      "formula": "=COUNTIF(A2:A5,C2)",
+      "base": [
+        [
+          2
+        ]
+      ],
+      "changed": [
+        [
+          3
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s43",
+      "formula": "=COUNTA(A2:A4)",
+      "base": [
+        [
+          3
+        ]
+      ],
+      "changed": [
+        [
+          2
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s44",
+      "formula": "=TRIM(A2)",
+      "base": [
+        [
+          "Alex Tan"
+        ]
+      ],
+      "changed": [
+        [
+          "Bo Lee"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s45",
+      "formula": "=SUM(A2:A4)",
+      "base": [
+        [
+          600
+        ]
+      ],
+      "changed": [
+        [
+          650
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s46",
+      "formula": "=XLOOKUP(D2,A2:A4,B2:B4,\"Unmatched\")",
+      "base": [
+        [
+          "Laptop"
+        ]
+      ],
+      "changed": [
+        [
+          "Access point"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s47",
+      "formula": "=COUNTIF(A2:A5,C2)/COUNTA(A2:A5)",
+      "base": [
+        [
+          0.75
+        ]
+      ],
+      "changed": [
+        [
+          1
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s48",
+      "formula": "=AVERAGEIFS(B2:B5,A2:A5,D2)",
+      "base": [
+        [
+          25
+        ]
+      ],
+      "changed": [
+        [
+          30
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s49",
+      "formula": "=SUM(A2:A4)",
+      "base": [
+        [
+          9
+        ]
+      ],
+      "changed": [
+        [
+          8
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s50",
+      "formula": "=SUMPRODUCT(A2:A4,B2:B4)",
+      "base": [
+        [
+          2200
+        ]
+      ],
+      "changed": [
+        [
+          2550
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "s51",
+      "formula": "=COUNTIF(B2:B4,\"\")",
+      "base": [
+        [
+          1
+        ]
+      ],
+      "changed": [
+        [
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x07",
+      "formula": "=LET(total,SUM(A2:A4),total*B2)",
+      "base": [
+        [
+          60
+        ]
+      ],
+      "changed": [
+        [
+          120
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x08",
+      "formula": "=-PMT(B2/12,C2,A2)",
+      "base": [
+        [
+          1032.7971564849677
+        ]
+      ],
+      "changed": [
+        [
+          1000
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "x09",
+      "formula": "=A2*B2-C2",
+      "base": [
+        [
+          -540
+        ]
+      ],
+      "changed": [
+        [
+          0
+        ]
+      ],
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+Licences for Excel: zero to reporting
+Copyright (c) 2026 zznabil and contributors
+
+Scope
+-----
+The software is licensed under MIT. This covers the application engine,
+interface markup and styles, calculators, build/test tools, configuration,
+and programmatic structures in the course files.
+
+Original educational content and synthetic data are licensed under
+Creative Commons Attribution 4.0 International (CC BY 4.0). This covers
+lesson prose, questions, answers, worked examples, instructions, schedules,
+original documentation and the CSV records in Data. It includes educational
+content embedded in lessons.js, checks.js and SCHEDULE.html. This content
+scope is excluded from the MIT grant below.
+
+These are separate grants by material type, not a choice between licences.
+Third-party material and dependencies are excluded as described below.
+
+MIT License — software
+----------------------
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+CC BY 4.0 — original educational content and synthetic data
+----------------------------------------------------------
+The original content and data identified above are licensed under the
+Creative Commons Attribution 4.0 International Public License:
+https://creativecommons.org/licenses/by/4.0/
+Legal terms: https://creativecommons.org/licenses/by/4.0/legalcode.en
+
+You may share and adapt this material, including commercially, under those
+terms. Retain appropriate credit and the licence link, indicate changes,
+and do not imply endorsement. The legal terms govern; this short notice
+does not replace them. The material is provided without warranties, subject
+to the licence's disclaimer and limitation of liability.
+
+Suggested credit:
+"Excel: zero to reporting — zznabil and contributors,
+https://github.com/zznabil/excel-zero-to-reporting,
+CC BY 4.0." Indicate any changes you make.
+
+Third-party exclusions
+----------------------
+Linked providers' text, images, videos, workbooks, exercises, trademarks
+and other protected material are not licensed by this project. No licence
+to those materials is implied by a link, research observation or reference.
+Third-party lessons, videos, workbooks and exercise answers are not bundled.
+
+Development dependencies retain their own licences. They are not bundled
+in the learner distribution. package-lock.json identifies the pinned tools.
