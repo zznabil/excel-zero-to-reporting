@@ -6,11 +6,17 @@ import {loadCourse,root} from './plan.mjs';
 const {lessons}=loadCourse();
 const oracle=JSON.parse(fs.readFileSync(path.join(root,'tests/excel-oracle.json'),'utf8'));
 const projectOracle=JSON.parse(fs.readFileSync(path.join(root,'tests/project-oracle.json'),'utf8'));
-const url=process.env.COURSE_URL||pathToFileURL(path.join(root,'START-HERE.html')).href;
+const url=process.env.COURSE_URL||'http://127.0.0.1:8765/START-HERE.html';
+const previewURL=pathToFileURL(path.join(process.env.COURSE_ROOT||root,'START-HERE.html')).href;
 const key='excel-zero-to-reporting-public-v1',oldKey='cert-skills-linear-v1';
 const display=(v,f)=>typeof v!=='number'?String(v):f==='decimal2'?v.toFixed(2):f==='percent'?(v*100).toFixed(1)+'%':f==='date'?new Date(Date.UTC(1899,11,30)+v*86400000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}):String(Number(v.toPrecision(12)));
 async function open(page,id){await page.goto(url+(id?'#'+id:''));await expect(page.locator('[aria-current="page"]')).toHaveCount(1);}
 async function compare(page,l,matrix){await expect(page.locator('[data-result]')).toHaveText(matrix.flat().map(v=>display(v,l.example.display)));}
+async function compareSavedControls(page,correct){
+  const saved=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),key);expect(saved.completed).toEqual(['s01']);expect(saved.answers.s01).toBe(correct);
+  await expect(page.locator('#progress')).toHaveAttribute('value','1');await expect(page.locator('#complete')).toBeChecked();
+  await expect(page.locator(`input[name="answer"][value="${correct}"]`)).toBeChecked();await expect(page.locator('#quiz-feedback')).toContainText('Correct.');
+}
 async function compareWorked(page,pairs){
   await page.locator('#worked-check summary').click();
   for(const [id,name]of pairs){const observed=projectOracle.checks.find(c=>c.name===name);expect(observed?.passed).toBe(true);await expect(page.locator(`[data-worked-case="${id}"] td`)).toHaveText(String(observed.actual));}
@@ -40,14 +46,12 @@ test('all lessons: native results, edits, reset, feedback, navigation and persis
 });
 test('genuine backup download, restore, cancellation, foreign record and legacy isolation',async({page},testInfo)=>{
   const legacy=JSON.stringify({current:'s02',completed:['s01'],positions:{s02:225},answers:{s01:1}});
-  await page.addInitScript(({key,oldKey,legacy})=>{if(localStorage.getItem(oldKey)===null)localStorage.setItem(oldKey,legacy);const get=Storage.prototype.getItem;Storage.prototype.getItem=function(k){const value=get.call(this,k);if(k===key&&!Object.hasOwn(window,'__courseProgressAtBoot'))window.__courseProgressAtBoot=value;return value;};},{key,oldKey,legacy});
+  await page.addInitScript(({oldKey,legacy})=>{if(localStorage.getItem(oldKey)===null)localStorage.setItem(oldKey,legacy);},{oldKey,legacy});
   await open(page);await page.locator('#complete').check();await page.locator('input[name="answer"][value="1"]').check();await page.locator('#quiz-form button').click();
   const downloadPromise=page.waitForEvent('download');await page.locator('#export-progress').click();const download=await downloadPromise,file=testInfo.outputPath('downloaded-progress.json');await download.saveAs(file);const backup=JSON.parse(fs.readFileSync(file,'utf8'));expect(backup.format).toBe('excel-zero-to-reporting-public');expect(backup.state.completed).toEqual(['s01']);
   await page.locator('#complete').uncheck();await importBackup(page,testInfo,'cancel.json',backup,false);await expect(page.locator('#backup-status')).toContainText('cancelled');await expect(page.locator('#complete')).not.toBeChecked();
   await importBackup(page,testInfo,'restore.json',backup,true);await expect(page.locator('#backup-status')).toHaveText('Progress restored and saved in this browser. Excel workbooks are unchanged.');
-  await page.reload();
-  try{await expect(page.locator('#complete')).toBeChecked();}
-  catch(error){console.log('RESTORE_RELOAD_FAILURE',JSON.stringify(await page.evaluate(k=>({url:location.href,boot:window.__courseProgressAtBoot,stored:localStorage.getItem(k),checked:document.getElementById('complete').checked,lesson:document.querySelector('[aria-current="page"]')?.dataset.session,progress:document.getElementById('progress').value}),key)));throw error;}
+  await page.reload();await expect(page.locator('#complete')).toBeChecked();
   const before=await page.evaluate(k=>localStorage.getItem(k),key);
   await importBackup(page,testInfo,'foreign.json',{format:'cert-skills-progress',version:2,courseVersion:1,state:backup.state});await expect(page.locator('#backup-status')).toContainText('not restored');
   await importBackup(page,testInfo,'invalid.json',{...backup,state:{...backup.state,answers:{s01:99}}});await expect(page.locator('#backup-status')).toContainText('invalid');
@@ -75,8 +79,8 @@ test('unsupported and invalid inputs do not show plausible stale output',async({
   await open(page,'s05');await page.locator('[data-input="B2"]').fill('0');await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('denominator is zero');
   await page.locator('[data-input="B2"]').fill('');await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('Enter a number');await page.locator('#reset-example').click();await expect(page.locator('#example-status')).toContainText('Calculated');
 });
-test('offline original inputs and copy fallback',async({page,context},testInfo)=>{
-  await context.setOffline(true);await open(page,'s51');await expect(page.locator('#lesson-title')).toHaveText('Excel Refreshable Asset Report');
+test('offline file preview downloads original inputs and offers copy fallback',async({page,context},testInfo)=>{
+  await context.setOffline(true);await page.goto(previewURL+'#s51');await expect(page.locator('#lesson-title')).toHaveText('Excel Refreshable Asset Report');
   await page.evaluate(()=>{document.execCommand=()=>false;});await page.locator('#copy-data').click();await expect(page.locator('#copy-fallback')).toBeVisible();await expect(page.locator('#copy-text')).toHaveValue(/AssetID\tOwner/);
   for(const link of await page.locator('#resources a').all()){
     const download=page.waitForEvent('download');await page.locator('#resources').evaluate(e=>{e.open=true;});await link.click();const d=await download;const target=testInfo.outputPath(d.suggestedFilename());await d.saveAs(target);expect(fs.statSync(target).size).toBeGreaterThan(0);
@@ -116,4 +120,38 @@ test('restored progress and lesson survive reload when History API is unavailabl
   await expect(page).toHaveURL(/#s01$/);await expect(page.locator('#complete')).toBeChecked();
   await page.reload();await expect(page.locator('#lesson-title')).toHaveText(lessons[0].title);await expect(page.locator('#complete')).toBeChecked();
   await expect(page.locator(`input[name="answer"][value="${lessons[0].quiz.correct}"]`)).toBeChecked();await expect(page.locator('#quiz-progress')).toContainText('1 of 60');
+});
+test('document Back history restores saved practice and answers, not obsolete form values',async({page})=>{
+  const correct=lessons[0].quiz.correct,wrong=(correct+1)%lessons[0].quiz.options.length;
+  await open(page,'s01');await page.locator(`input[name="answer"][value="${wrong}"]`).check();
+  await page.goto('about:blank');await open(page,'s01');
+  await page.locator('#complete').check();await page.locator(`input[name="answer"][value="${correct}"]`).check();await page.locator('#quiz-form button').click();
+  await page.goBack({waitUntil:'commit'});await page.goBack({waitUntil:'commit'});await expect(page.locator('#lesson-title')).toHaveText(lessons[0].title);
+  await compareSavedControls(page,correct);
+});
+test('file preview preserves old saved bytes and exports current in-memory practice honestly',async({page},testInfo)=>{
+  const original=JSON.stringify({current:'s01',completed:[],answers:{}});
+  await page.addInitScript(({key,original})=>{if(localStorage.getItem(key)===null)localStorage.setItem(key,original);},{key,original});
+  await page.goto(previewURL+'#s01');await expect(page.locator('#save-status')).toContainText('File preview: automatic saving is off');
+  await expect(page.locator('#save-status')).toBeInViewport();
+  await page.locator('#complete').check();expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(original);
+  const downloading=page.waitForEvent('download');await page.locator('#export-progress').click();const download=await downloading,file=testInfo.outputPath('file-preview-backup.json');await download.saveAs(file);
+  const backup=JSON.parse(fs.readFileSync(file,'utf8'));expect(backup.state.completed).toEqual(['s01']);
+  await page.locator('#complete').uncheck();await importBackup(page,testInfo,'preview-restore.json',backup);
+  await expect(page.locator('#complete')).toBeChecked();await expect(page.locator('#backup-status')).toContainText('Restored in memory only');expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(original);
+});
+test.describe('native back-forward cache',()=>{
+  for(const broken of [false,true])test(broken?'the saved-control verifier rejects a stale cached document':'cached documents re-read the current saved practice and answer',async({page})=>{
+    await page.addInitScript(broken=>{
+      window.addEventListener('pageshow',event=>{window.__courseWasCached=event.persisted;});
+      if(broken){const add=window.addEventListener;window.addEventListener=function(type,...args){if(type!=='pageshow')return add.call(this,type,...args);};}
+    },broken);
+    const correct=lessons[0].quiz.correct,wrong=(correct+1)%lessons[0].quiz.options.length;
+    await open(page,'s01');await page.locator(`input[name="answer"][value="${wrong}"]`).check();
+    await page.goto(new URL('SCHEDULE.html',url).href);await open(page,'s01');
+    await page.locator('#complete').check();await page.locator(`input[name="answer"][value="${correct}"]`).check();await page.locator('#quiz-form button').click();
+    await page.goBack({waitUntil:'commit'});await page.goBack({waitUntil:'commit'});
+    await expect.poll(()=>page.evaluate(()=>window.__courseWasCached)).toBe(true);
+    if(broken)await expect(compareSavedControls(page,correct)).rejects.toThrow();else await compareSavedControls(page,correct);
+  });
 });

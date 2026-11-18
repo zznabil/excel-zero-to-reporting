@@ -11,6 +11,7 @@
     "test:browser": "playwright test",
     "test:native": "node tests/plan.mjs && powershell -NoProfile -ExecutionPolicy Bypass -File tests/native-excel.ps1",
     "test:projects": "powershell -NoProfile -ExecutionPolicy Bypass -File tests/native-projects.ps1",
+    "test:server": "python -m unittest tools.test_server",
     "test:package": "python -m unittest tools.test_package",
     "package": "python tools/package.py"
   },
