@@ -21,6 +21,7 @@ jobs:
       - run: npm ci --ignore-scripts --no-fund --no-audit
       - run: npx playwright install --with-deps chromium
       - run: npm test
+      - run: npm run test:server
       - run: npm run test:browser
       - run: npm run test:package
       - run: npm run package

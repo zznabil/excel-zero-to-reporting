@@ -1,8 +1,8 @@
-(() => {
+(async() => {
   'use strict';
-  const lessons=window.EXCEL_TUTORIAL,demos=window.EXCEL_DEMOS,checks=window.EXCEL_CHECKS,$=id=>document.getElementById(id);
-  if(!Array.isArray(lessons)||!lessons.length||!demos||!checks||new Set(lessons.map(l=>l.id)).size!==lessons.length||lessons.some(l=>typeof checks[l.id]!=='string'||!checks[l.id].trim()))return;
-  const byId=new Map(lessons.map(l=>[l.id,l])),key='excel-zero-to-reporting-public-v1',courseId='excel-zero-to-reporting-public',version=1;
+  const lessons=window.EXCEL_TUTORIAL,demos=window.EXCEL_DEMOS,checks=window.EXCEL_CHECKS,storage=window.EXCEL_PROGRESS_STORE,$=id=>document.getElementById(id);
+  if(!storage||!Array.isArray(lessons)||!lessons.length||!demos||!checks||new Set(lessons.map(l=>l.id)).size!==lessons.length||lessons.some(l=>typeof checks[l.id]!=='string'||!checks[l.id].trim()))return;
+  const byId=new Map(lessons.map(l=>[l.id,l])),key='excel-zero-to-reporting-public-v2',courseId='excel-zero-to-reporting-public',version=1,filePreview=location.protocol==='file:';
   const modules={'00':'Start small','01':'Cells and formulas','02':'Counts and conditions','03':'Formatting and rounding','04':'Dates and durations','05':'Rules and errors','06':'Lookups and reconciliation','07':'Reliable formulas and Tables','08':'Pivots and readable reports','09':'Import, clean and refresh','10':'Your independent asset report','11':'Later: advanced tools and MOS'};
   const fresh=()=>({current:lessons[0].id,completed:[],answers:{}});
   function validate(value){
@@ -14,15 +14,62 @@
     }
     return {current:value.current,completed:[...value.completed],answers};
   }
-  let state=fresh(),damaged=null,storageBlocked=false,current=lessons[0],cells={};
-  let raw=null;
-  try{raw=localStorage.getItem(key);if(raw!==null)state=validate(JSON.parse(raw));}catch(_){if(raw!==null)damaged=raw;else storageBlocked=true;}
-  function persist(){
+  let state=fresh(),damaged=null,storageBlocked=false,current=lessons[0],cells={},answerDirty=false,pending=0,saving=Promise.resolve(),revision=0,refreshId=0,updates=null,memoryDirty=false,recoveryConflict=false,refreshRequested=false;
+  let saveFailure='Browser storage is unavailable. Progress is in memory only. Save a JSON backup before closing.';
+  function decode(raw){
+    if(raw===undefined){damaged=null;return fresh();}
+    try{const next=validate(JSON.parse(raw));damaged=null;return next;}
+    catch(error){damaged=typeof raw==='string'?raw:JSON.stringify(raw);throw error;}
+  }
+  async function readSaved(stillCurrent=()=>true){
+    try{const raw=await storage.read();return stillCurrent()?decode(raw):null;}
+    catch(_){if(stillCurrent()&&damaged===null)storageBlocked=true;return null;}
+  }
+  function saveNotice(){
     $('damaged-progress').hidden=damaged===null;
-    if(damaged!==null){$('save-status').textContent='Saved progress is unreadable and has not been overwritten. Save the unreadable record or restore a valid backup. Your Excel files are unaffected.';$('progress-link').textContent='Recover progress';return false;}
-    if(storageBlocked){$('save-status').textContent='Browser storage is blocked. Progress is in memory only. Save a JSON backup before closing.';$('progress-link').textContent='Save backup';return false;}
-    try{localStorage.setItem(key,JSON.stringify(state));$('save-status').textContent='Progress saved in this browser. Save your Excel workbook separately.';$('progress-link').textContent='Progress';return true;}
-    catch(_){storageBlocked=true;$('save-status').textContent='Browser storage cannot save progress. Progress is in memory only. Save a JSON backup before closing.';$('progress-link').textContent='Save backup';return false;}
+    if(recoveryConflict){$('save-status').textContent='Saved progress was recovered in another tab. This tab has unsaved changes in memory. Save a JSON backup, then reload this tab to use the saved record.';$('progress-link').textContent='Save backup';}
+    else if(damaged!==null){$('save-status').textContent='Saved progress is unreadable and has not been overwritten. New progress is in memory only. Save a JSON backup and the unreadable record before recovery. Your Excel files are unaffected.';$('progress-link').textContent='Recover progress';}
+    else if(filePreview){$('save-status').className='warning';$('save-status').textContent='File preview: automatic saving is off because file:// storage is unreliable. Start START-COURSE.cmd, or run python -m tools.serve, for reliable local progress. Save a JSON backup before leaving this preview; restore it in the launched course.';$('progress-link').textContent='Save backup';}
+    else if(storageBlocked){$('save-status').textContent=saveFailure;$('progress-link').textContent='Save backup';}
+    else{$('save-status').textContent=pending?'Saving progress...':'Progress saved in this browser. Save your Excel workbook separately.';$('progress-link').textContent='Progress';}
+  }
+  function syncProgress(){
+    state.current=current.id;progress();rail();$('complete').checked=state.completed.includes(current.id);
+    $('complete').disabled=recoveryConflict;$('quiz-form').querySelector('button').disabled=recoveryConflict;
+    if(pending||memoryDirty)window.addEventListener('beforeunload',leaving);else window.removeEventListener('beforeunload',leaving);
+    if(!answerDirty){for(const radio of $('quiz-options').querySelectorAll('input'))radio.checked=state.answers[current.id]===Number(radio.value);feedback();}
+    saveNotice();
+  }
+  async function refreshProgress(){
+    if(pending){refreshRequested=true;return;}refreshRequested=false;
+    if(recoveryConflict){syncProgress();return;}
+    const attempt=++refreshId,before=revision,wasDamaged=damaged!==null;
+    if(!filePreview&&!storageBlocked){
+      const currentRead=()=>attempt===refreshId&&before===revision&&!pending;
+      const latest=await readSaved(currentRead);
+      if(!currentRead())return;
+      if(latest){if(wasDamaged&&memoryDirty)recoveryConflict=true;else state=latest;}
+    }
+    syncProgress();
+  }
+  function connectUpdates(){
+    if(filePreview||storageBlocked||updates||typeof BroadcastChannel!=='function')return;
+    try{updates=new BroadcastChannel(key);updates.onmessage=()=>refreshProgress();}catch(_){updates=null;}
+  }
+  function leaving(event){event.preventDefault();event.returnValue='';}
+  function persist(edit,{replace=false,track=true}={}){
+    revision++;if(!pending)window.addEventListener('beforeunload',leaving);pending++;saveNotice();
+    saving=saving.then(async()=>{
+      if(filePreview||storageBlocked||(recoveryConflict&&!replace)){state=edit(state);memoryDirty=memoryDirty||track;return false;}
+      let next;
+      try{
+        await storage.update(raw=>{const wasDamaged=damaged!==null,base=replace?state:decode(raw);if(!replace&&wasDamaged&&memoryDirty){recoveryConflict=true;throw Error('Unsaved memory needs explicit reconciliation.');}next=edit(base);return JSON.stringify(next);});
+        state=next;damaged=null;memoryDirty=false;recoveryConflict=false;
+      }catch(_){state=next||edit(state);memoryDirty=memoryDirty||track;if(damaged===null&&!recoveryConflict){storageBlocked=true;saveFailure='Browser storage cannot save progress. Progress is in memory only. Save a JSON backup before closing.';}return false;}
+      try{updates?.postMessage(null);}catch(_){updates?.close();updates=null;}
+      return true;
+    }).finally(()=>{pending--;if(!pending){syncProgress();if(refreshRequested)refreshProgress();}else saveNotice();});
+    return saving;
   }
   function progress(){
     const correct=Object.entries(state.answers).filter(([id,a])=>byId.get(id).quiz.correct===a).length;
@@ -57,7 +104,7 @@
     const body=document.createElement('tbody');
     for(let r=1;r<=maxRow;r++){const row=document.createElement('tr'),label=document.createElement('th');label.scope='row';label.textContent=r;row.append(label);
       for(let c=1;c<=maxColumn;c++){const address=demos.name(c,r),td=document.createElement('td');td.dataset.cell=address;
-        if(e.editable.includes(address)){const input=document.createElement('input');input.dataset.input=address;input.setAttribute('aria-label',`Example cell ${address}`);input.type=typeof e.cells[address]==='number'?'number':'text';if(input.type==='number')input.step='any';input.value=cells[address]??'';
+        if(e.editable.includes(address)){const input=document.createElement('input');input.autocomplete='off';input.dataset.input=address;input.setAttribute('aria-label',`Example cell ${address}`);input.type=typeof e.cells[address]==='number'?'number':'text';if(input.type==='number')input.step='any';input.value=cells[address]??'';
           input.addEventListener('input',()=>{$('example-status').textContent='Inputs changed. Run example to calculate. Example edits reset when you leave the lesson.';for(const output of table.querySelectorAll('.output'))output.textContent='—';});td.append(input);
         }else if(Object.hasOwn(outputs,address)){td.className='output';td.dataset.result=address;td.textContent=valueText(outputs[address],e.display);}else if(address===e.output){td.className='output';td.textContent='—';}else td.textContent=e.cells[address]??'';row.append(td);
       }body.append(row);
@@ -70,8 +117,11 @@
   }
   function quiz(){
     const q=current.quiz;$('quiz-question').textContent=q.question;$('quiz-options').replaceChildren(...q.options.map((text,i)=>{const label=document.createElement('label');label.className='quiz-option';const radio=document.createElement('input');radio.type='radio';radio.name='answer';radio.value=i;radio.checked=state.answers[current.id]===i;
-      radio.addEventListener('change',()=>{$('quiz-feedback').className='';$('quiz-feedback').textContent='Selection changed. Choose Check answer to save and check it.';});label.append(radio,document.createTextNode(text));return label;}));
-    const answer=state.answers[current.id];$('quiz-feedback').className='';$('quiz-feedback').textContent=answer===undefined?'Choose an answer, then check it.':`${answer===q.correct?'Correct.':'Not quite. Try again.'} ${q.explain}`;
+      radio.addEventListener('change',()=>{answerDirty=true;$('quiz-feedback').className='';$('quiz-feedback').textContent='Selection changed. Choose Check answer to save and check it.';});label.append(radio,document.createTextNode(text));return label;}));
+    answerDirty=false;feedback();
+  }
+  function feedback(){
+    const q=current.quiz,answer=state.answers[current.id];$('quiz-feedback').className=answer===undefined?'':answer===q.correct?'correct':'error';$('quiz-feedback').textContent=answer===undefined?'Choose an answer, then check it.':`${answer===q.correct?'Correct.':'Not quite. Try again.'} ${q.explain}`;
   }
   function show(id,focus=true){
     const lesson=byId.get(id);if(!lesson)return;current=lesson;state.current=id;
@@ -91,15 +141,16 @@
     }
     $('example-explain').textContent=lesson.example.explain;$('example-formula').value=lesson.example.formula;cells={...lesson.example.cells};renderExample();run();quiz();$('copy-fallback').hidden=true;$('copy-status').textContent='';$('complete').checked=state.completed.includes(id);
     const index=lessons.indexOf(lesson);for(const suffix of ['','-top']){$('previous'+suffix).disabled=index===0;$('next'+suffix).disabled=index===lessons.length-1;$('next'+suffix).textContent=index===lessons.length-1?'End of tutorial':'Next ❯';$('position'+suffix).textContent=`${index+1} / ${lessons.length}`;}
-    progress();rail();persist();$('sidebar').classList.remove('open');$('menu').setAttribute('aria-expanded','false');if(focus){$('lesson-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+    progress();rail();persist(next=>{next.current=id;return next;},{track:false});$('sidebar').classList.remove('open');$('menu').setAttribute('aria-expanded','false');if(focus){$('lesson-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
   }
   function go(id){if(!byId.has(id))return;if(location.hash==='#'+id)show(id);else location.hash=id;}
   function download(text,filename,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-  function use(next){
-    state=next;damaged=null;
-    // Persist the restored state before fragment navigation; no History API is needed.
-    show(state.current);
-    if(location.hash&&location.hash!=='#'+state.current)go(state.current);
+  async function use(next){
+    // Explicit replacement is confirmed by the caller and uses one write transaction.
+    const saved=await persist(()=>validate(next),{replace:true});
+    show(next.current);
+    if(location.hash&&location.hash!=='#'+next.current)go(next.current);
+    return saved;
   }
   function copy(text){
     const source=document.activeElement,y=window.scrollY;$('copy-text').value=text;$('copy-fallback').hidden=false;$('copy-text').focus();$('copy-text').select();let copied=false;try{copied=document.execCommand('copy');}catch(_){}
@@ -108,22 +159,29 @@
   $('run-example').addEventListener('click',run);$('reset-example').addEventListener('click',()=>{cells={...current.example.cells};renderExample();run();});
   $('copy-formula').addEventListener('click',()=>copy(current.example.formula));
   $('copy-data').addEventListener('click',()=>{const e=current.example,p=Object.keys(e.cells).map(demos.address),rows=Math.max(...p.map(x=>x.row)),cols=Math.max(...p.map(x=>x.column));copy(Array.from({length:rows},(_,r)=>Array.from({length:cols},(_,c)=>String(e.cells[demos.name(c+1,r+1)]??'')).join('\t')).join('\n'));});
-  $('quiz-form').addEventListener('submit',event=>{event.preventDefault();const chosen=$('quiz-form').querySelector('input:checked');if(!chosen){$('quiz-feedback').className='error';$('quiz-feedback').textContent='Choose one answer before checking.';return;}const answer=Number(chosen.value),q=current.quiz;state.answers[current.id]=answer;$('quiz-feedback').className=answer===q.correct?'correct':'error';$('quiz-feedback').textContent=`${answer===q.correct?'Correct.':'Not quite. Try again.'} ${q.explain}`;progress();persist();});
-  $('complete').addEventListener('change',()=>{state.completed=$('complete').checked?[...new Set([...state.completed,current.id])]:state.completed.filter(id=>id!==current.id);progress();rail();persist();});
+  $('quiz-form').addEventListener('submit',event=>{event.preventDefault();const chosen=$('quiz-form').querySelector('input:checked');if(!chosen){answerDirty=true;$('quiz-feedback').className='error';$('quiz-feedback').textContent='Choose one answer before checking.';return;}const id=current.id,answer=Number(chosen.value);answerDirty=false;persist(next=>{next.current=id;next.answers[id]=answer;return next;});});
+  $('complete').addEventListener('change',()=>{const id=current.id,checked=$('complete').checked;persist(next=>{next.current=id;next.completed=checked?[...new Set([...next.completed,id])]:next.completed.filter(value=>value!==id);return next;});});
   for(const suffix of ['','-top']){$('previous'+suffix).addEventListener('click',()=>go(lessons[lessons.indexOf(current)-1]?.id));$('next'+suffix).addEventListener('click',()=>go(lessons[lessons.indexOf(current)+1]?.id));}
   $('resume').addEventListener('click',()=>go((lessons.find(l=>!state.completed.includes(l.id))||lessons.at(-1)).id));
+  window.addEventListener('pageshow',async event=>{if(event.persisted){$('save-status').textContent='Loading saved progress...';await refreshProgress();connectUpdates();show(byId.has(location.hash.slice(1))?location.hash.slice(1):state.current,false);}});
+  window.addEventListener('pagehide',()=>{if(!pending){updates?.close();updates=null;storage.close();}});
+  window.addEventListener('focus',()=>refreshProgress());
   window.addEventListener('hashchange',()=>{if(byId.has(location.hash.slice(1)))show(location.hash.slice(1));});$('topic-search').addEventListener('input',rail);
   $('menu').addEventListener('click',()=>{const open=$('sidebar').classList.toggle('open');$('menu').setAttribute('aria-expanded',String(open));if(open)$('topic-search').focus();});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('sidebar').classList.contains('open')){$('sidebar').classList.remove('open');$('menu').setAttribute('aria-expanded','false');$('menu').focus();}});
   $('theme').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').setAttribute('aria-pressed',String(dark));$('theme').textContent=dark?'Light theme':'Dark theme';});
-  $('export-progress').disabled=false;$('import-progress').disabled=false;
-  $('export-progress').addEventListener('click',()=>{download(JSON.stringify({format:courseId,version,state,exportedAt:new Date().toISOString()},null,2),'excel-public-progress-'+new Date().toISOString().slice(0,10)+'.json','application/json;charset=utf-8');$('backup-status').textContent='Backup sent to browser downloads. Excel workbooks are not included.';});
+  $('export-progress').addEventListener('click',async()=>{await saving;await refreshProgress();download(JSON.stringify({format:courseId,version,state,exportedAt:new Date().toISOString()},null,2),'excel-public-progress-'+new Date().toISOString().slice(0,10)+'.json','application/json;charset=utf-8');$('backup-status').textContent='Backup sent to browser downloads. Excel workbooks are not included.';});
   $('import-progress').addEventListener('change',async event=>{const input=event.target,file=input.files[0];if(!file)return;input.disabled=true;$('backup-status').textContent='Reading backup...';
     try{if(file.size>128*1024)throw Error('Choose a backup smaller than 128 KiB.');const backup=JSON.parse(await file.text());if(backup.format!==courseId||backup.version!==version)throw Error('Choose a backup for this public edition. Old local-course backups remain usable only in the old course.');const next=validate(backup.state);
       if(!window.confirm(`Restore ${next.completed.length} practice ticks and ${Object.keys(next.answers).length} checked answers? This replaces only this public course's progress. Excel files and the old local course are unchanged.`)){$('backup-status').textContent='Restore cancelled. Current progress is unchanged.';return;}
-      use(next);$('backup-status').textContent=storageBlocked?'Restored in memory only. Save a JSON backup before closing.':'Progress restored and saved in this browser. Excel workbooks are unchanged.';
+      $('backup-status').textContent='Restoring backup...';const saved=await use(next);$('backup-status').textContent=saved?'Progress restored and saved in this browser. Excel workbooks are unchanged.':'Restored in memory only. Save a JSON backup before closing.';
     }catch(error){$('backup-status').textContent=`Backup not restored: ${error instanceof SyntaxError?'invalid JSON.':error.message} Current progress is unchanged.`;}finally{input.value='';input.disabled=false;}
   });
   $('export-damaged').addEventListener('click',()=>{if(damaged!==null)download(damaged,'excel-public-progress-unreadable.txt','text/plain;charset=utf-8');});
-  $('reset-progress').addEventListener('click',()=>{if(window.confirm('Start fresh? Save the unreadable record first if needed. This replaces only public-course progress. Excel files and old local progress remain unchanged.')){use(fresh());$('backup-status').textContent=storageBlocked?'Fresh progress is in memory only. Save a JSON backup.':'Fresh progress saved.';}});
+  $('reset-progress').addEventListener('click',async()=>{if(window.confirm('Start fresh? Save the unreadable record first if needed. This replaces only public-course progress. Excel files and old local progress remain unchanged.')){const saved=await use(fresh());$('backup-status').textContent=saved?'Fresh progress saved.':'Fresh progress is in memory only. Save a JSON backup.';}});
+  $('complete').disabled=true;$('quiz-form').querySelector('button').disabled=true;
+  if(!filePreview)state=await readSaved()||state;
+  connectUpdates();$('complete').disabled=false;$('quiz-form').querySelector('button').disabled=false;
+  $('export-progress').disabled=false;$('import-progress').disabled=false;
+  if(filePreview)$('loading-warning').after($('save-status'));
   $('loading-warning').hidden=true;show(byId.has(location.hash.slice(1))?location.hash.slice(1):state.current,false);
 })();
