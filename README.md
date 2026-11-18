@@ -47,6 +47,7 @@ Question answers and self-declared workbook practice are tracked separately. A q
 - Restore requires confirmation. Cancelling or selecting invalid/foreign JSON leaves current progress unchanged.
 - Automatic saving needs working IndexedDB storage, supported by current Chrome, Edge and Brave. If it is unavailable, blocked or full, progress remains in memory and the page tells you to save a backup before closing.
 - An unreadable saved record is not overwritten. Export its raw bytes before starting fresh if you need them.
+- If another tab recovers saved progress while this tab has unsaved work, tracking pauses to preserve both records. **Save this tab's JSON backup before reloading.** Reload adopts the saved record; it does not merge unsaved work. A restored backup replaces progress, so do not restore over newer work blindly.
 - This public edition has a distinct storage key and backup identity. The previous private/local course remains unchanged; its backups are not misinterpreted as public-course completion.
 - Before switching from a file preview, another address or another browser, export JSON in the old view and restore it in the new one. There is no automatic cross-origin migration. File preview requires a backup before every exit, not only weekly.
 - Earlier public prototypes use a separate storage generation and cannot overwrite this release. Export JSON from the old public view and explicitly restore it here; its saved bytes are not automatically read, migrated or deleted. Private/local-course backups remain a different format.

@@ -14,36 +14,41 @@
     }
     return {current:value.current,completed:[...value.completed],answers};
   }
-  let state=fresh(),damaged=null,storageBlocked=false,current=lessons[0],cells={},answerDirty=false,pending=0,saving=Promise.resolve(),revision=0,refreshId=0,updates=null;
+  let state=fresh(),damaged=null,storageBlocked=false,current=lessons[0],cells={},answerDirty=false,pending=0,saving=Promise.resolve(),revision=0,refreshId=0,updates=null,memoryDirty=false,recoveryConflict=false,refreshRequested=false;
   let saveFailure='Browser storage is unavailable. Progress is in memory only. Save a JSON backup before closing.';
   function decode(raw){
-    if(raw===undefined)return fresh();
+    if(raw===undefined){damaged=null;return fresh();}
     try{const next=validate(JSON.parse(raw));damaged=null;return next;}
     catch(error){damaged=typeof raw==='string'?raw:JSON.stringify(raw);throw error;}
   }
-  async function readSaved(){
-    try{return decode(await storage.read());}
-    catch(_){if(damaged===null)storageBlocked=true;return null;}
+  async function readSaved(stillCurrent=()=>true){
+    try{const raw=await storage.read();return stillCurrent()?decode(raw):null;}
+    catch(_){if(stillCurrent()&&damaged===null)storageBlocked=true;return null;}
   }
   function saveNotice(){
     $('damaged-progress').hidden=damaged===null;
-    if(damaged!==null){$('save-status').textContent='Saved progress is unreadable and has not been overwritten. Save the unreadable record or restore a valid backup. Your Excel files are unaffected.';$('progress-link').textContent='Recover progress';}
+    if(recoveryConflict){$('save-status').textContent='Saved progress was recovered in another tab. This tab has unsaved changes in memory. Save a JSON backup, then reload this tab to use the saved record.';$('progress-link').textContent='Save backup';}
+    else if(damaged!==null){$('save-status').textContent='Saved progress is unreadable and has not been overwritten. New progress is in memory only. Save a JSON backup and the unreadable record before recovery. Your Excel files are unaffected.';$('progress-link').textContent='Recover progress';}
     else if(filePreview){$('save-status').className='warning';$('save-status').textContent='File preview: automatic saving is off because file:// storage is unreliable. Start START-COURSE.cmd, or run python -m tools.serve, for reliable local progress. Save a JSON backup before leaving this preview; restore it in the launched course.';$('progress-link').textContent='Save backup';}
     else if(storageBlocked){$('save-status').textContent=saveFailure;$('progress-link').textContent='Save backup';}
     else{$('save-status').textContent=pending?'Saving progress...':'Progress saved in this browser. Save your Excel workbook separately.';$('progress-link').textContent='Progress';}
   }
   function syncProgress(){
     state.current=current.id;progress();rail();$('complete').checked=state.completed.includes(current.id);
+    $('complete').disabled=recoveryConflict;$('quiz-form').querySelector('button').disabled=recoveryConflict;
+    if(pending||memoryDirty)window.addEventListener('beforeunload',leaving);else window.removeEventListener('beforeunload',leaving);
     if(!answerDirty){for(const radio of $('quiz-options').querySelectorAll('input'))radio.checked=state.answers[current.id]===Number(radio.value);feedback();}
     saveNotice();
   }
   async function refreshProgress(){
-    if(pending)return;
-    const attempt=++refreshId,before=revision;
-    if(!filePreview&&!storageBlocked&&damaged===null){
-      const latest=await readSaved();
-      if(attempt!==refreshId||before!==revision||pending)return;
-      if(latest)state=latest;
+    if(pending){refreshRequested=true;return;}refreshRequested=false;
+    if(recoveryConflict){syncProgress();return;}
+    const attempt=++refreshId,before=revision,wasDamaged=damaged!==null;
+    if(!filePreview&&!storageBlocked){
+      const currentRead=()=>attempt===refreshId&&before===revision&&!pending;
+      const latest=await readSaved(currentRead);
+      if(!currentRead())return;
+      if(latest){if(wasDamaged&&memoryDirty)recoveryConflict=true;else state=latest;}
     }
     syncProgress();
   }
@@ -52,18 +57,18 @@
     try{updates=new BroadcastChannel(key);updates.onmessage=()=>refreshProgress();}catch(_){updates=null;}
   }
   function leaving(event){event.preventDefault();event.returnValue='';}
-  function persist(edit,replace=false){
+  function persist(edit,{replace=false,track=true}={}){
     revision++;if(!pending)window.addEventListener('beforeunload',leaving);pending++;saveNotice();
     saving=saving.then(async()=>{
-      if(filePreview||storageBlocked||(damaged!==null&&!replace)){state=edit(state);return false;}
+      if(filePreview||storageBlocked||(recoveryConflict&&!replace)){state=edit(state);memoryDirty=memoryDirty||track;return false;}
       let next;
       try{
-        await storage.update(raw=>{next=edit(replace?state:decode(raw));return JSON.stringify(next);});
-        state=next;
-      }catch(_){state=next||edit(state);if(damaged===null){storageBlocked=true;saveFailure='Browser storage cannot save progress. Progress is in memory only. Save a JSON backup before closing.';}return false;}
+        await storage.update(raw=>{const wasDamaged=damaged!==null,base=replace?state:decode(raw);if(!replace&&wasDamaged&&memoryDirty){recoveryConflict=true;throw Error('Unsaved memory needs explicit reconciliation.');}next=edit(base);return JSON.stringify(next);});
+        state=next;damaged=null;memoryDirty=false;recoveryConflict=false;
+      }catch(_){state=next||edit(state);memoryDirty=memoryDirty||track;if(damaged===null&&!recoveryConflict){storageBlocked=true;saveFailure='Browser storage cannot save progress. Progress is in memory only. Save a JSON backup before closing.';}return false;}
       try{updates?.postMessage(null);}catch(_){updates?.close();updates=null;}
       return true;
-    }).finally(()=>{pending--;if(!pending){window.removeEventListener('beforeunload',leaving);syncProgress();}else saveNotice();});
+    }).finally(()=>{pending--;if(!pending){syncProgress();if(refreshRequested)refreshProgress();}else saveNotice();});
     return saving;
   }
   function progress(){
@@ -136,14 +141,13 @@
     }
     $('example-explain').textContent=lesson.example.explain;$('example-formula').value=lesson.example.formula;cells={...lesson.example.cells};renderExample();run();quiz();$('copy-fallback').hidden=true;$('copy-status').textContent='';$('complete').checked=state.completed.includes(id);
     const index=lessons.indexOf(lesson);for(const suffix of ['','-top']){$('previous'+suffix).disabled=index===0;$('next'+suffix).disabled=index===lessons.length-1;$('next'+suffix).textContent=index===lessons.length-1?'End of tutorial':'Next ❯';$('position'+suffix).textContent=`${index+1} / ${lessons.length}`;}
-    progress();rail();persist(next=>{next.current=id;return next;});$('sidebar').classList.remove('open');$('menu').setAttribute('aria-expanded','false');if(focus){$('lesson-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+    progress();rail();persist(next=>{next.current=id;return next;},{track:false});$('sidebar').classList.remove('open');$('menu').setAttribute('aria-expanded','false');if(focus){$('lesson-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
   }
   function go(id){if(!byId.has(id))return;if(location.hash==='#'+id)show(id);else location.hash=id;}
   function download(text,filename,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   async function use(next){
-    damaged=null;
     // Explicit replacement is confirmed by the caller and uses one write transaction.
-    const saved=await persist(()=>validate(next),true);
+    const saved=await persist(()=>validate(next),{replace:true});
     show(next.current);
     if(location.hash&&location.hash!=='#'+next.current)go(next.current);
     return saved;
@@ -159,7 +163,7 @@
   $('complete').addEventListener('change',()=>{const id=current.id,checked=$('complete').checked;persist(next=>{next.current=id;next.completed=checked?[...new Set([...next.completed,id])]:next.completed.filter(value=>value!==id);return next;});});
   for(const suffix of ['','-top']){$('previous'+suffix).addEventListener('click',()=>go(lessons[lessons.indexOf(current)-1]?.id));$('next'+suffix).addEventListener('click',()=>go(lessons[lessons.indexOf(current)+1]?.id));}
   $('resume').addEventListener('click',()=>go((lessons.find(l=>!state.completed.includes(l.id))||lessons.at(-1)).id));
-  window.addEventListener('pageshow',async event=>{if(event.persisted){$('save-status').textContent='Loading saved progress...';const before=revision;if(!filePreview&&!storageBlocked&&damaged===null){const latest=await readSaved();if(latest&&before===revision&&!pending)state=latest;}connectUpdates();show(byId.has(location.hash.slice(1))?location.hash.slice(1):state.current,false);}});
+  window.addEventListener('pageshow',async event=>{if(event.persisted){$('save-status').textContent='Loading saved progress...';await refreshProgress();connectUpdates();show(byId.has(location.hash.slice(1))?location.hash.slice(1):state.current,false);}});
   window.addEventListener('pagehide',()=>{if(!pending){updates?.close();updates=null;storage.close();}});
   window.addEventListener('focus',()=>refreshProgress());
   window.addEventListener('hashchange',()=>{if(byId.has(location.hash.slice(1)))show(location.hash.slice(1));});$('topic-search').addEventListener('input',rail);
@@ -169,7 +173,7 @@
   $('import-progress').addEventListener('change',async event=>{const input=event.target,file=input.files[0];if(!file)return;input.disabled=true;$('backup-status').textContent='Reading backup...';
     try{if(file.size>128*1024)throw Error('Choose a backup smaller than 128 KiB.');const backup=JSON.parse(await file.text());if(backup.format!==courseId||backup.version!==version)throw Error('Choose a backup for this public edition. Old local-course backups remain usable only in the old course.');const next=validate(backup.state);
       if(!window.confirm(`Restore ${next.completed.length} practice ticks and ${Object.keys(next.answers).length} checked answers? This replaces only this public course's progress. Excel files and the old local course are unchanged.`)){$('backup-status').textContent='Restore cancelled. Current progress is unchanged.';return;}
-      const saved=await use(next);$('backup-status').textContent=saved?'Progress restored and saved in this browser. Excel workbooks are unchanged.':'Restored in memory only. Save a JSON backup before closing.';
+      $('backup-status').textContent='Restoring backup...';const saved=await use(next);$('backup-status').textContent=saved?'Progress restored and saved in this browser. Excel workbooks are unchanged.':'Restored in memory only. Save a JSON backup before closing.';
     }catch(error){$('backup-status').textContent=`Backup not restored: ${error instanceof SyntaxError?'invalid JSON.':error.message} Current progress is unchanged.`;}finally{input.value='';input.disabled=false;}
   });
   $('export-damaged').addEventListener('click',()=>{if(damaged!==null)download(damaged,'excel-public-progress-unreadable.txt','text/plain;charset=utf-8');});

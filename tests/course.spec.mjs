@@ -146,7 +146,8 @@ test('document Back history restores saved practice and answers, not obsolete fo
   await open(page,'s01');await page.locator(`input[name="answer"][value="${wrong}"]`).check();
   await page.goto('about:blank');await open(page,'s01');
   await page.locator('#complete').check();await page.locator(`input[name="answer"][value="${correct}"]`).check();await page.locator('#quiz-form button').click();
-  await settled(page);await page.goBack({waitUntil:'commit'});await page.goBack({waitUntil:'commit'});await expect(page.locator('#lesson-title')).toHaveText(lessons[0].title);
+  await settled(page);await page.goBack({waitUntil:'commit'});await expect(page).toHaveURL('about:blank');await page.locator('html').waitFor({state:'attached'});
+  await page.goBack({waitUntil:'commit'});await expect(page.locator('#lesson-title')).toHaveText(lessons[0].title);
   await compareSavedControls(page,correct);
 });
 test('file preview preserves old saved bytes and exports current in-memory practice honestly',async({page},testInfo)=>{
@@ -170,7 +171,8 @@ test.describe('native back-forward cache',()=>{
     await open(page,'s01');await page.locator(`input[name="answer"][value="${wrong}"]`).check();
     await page.goto(new URL('SCHEDULE.html',url).href);await open(page,'s01');
     await page.locator('#complete').check();await page.locator(`input[name="answer"][value="${correct}"]`).check();await page.locator('#quiz-form button').click();
-    await settled(page);await page.goBack({waitUntil:'commit'});await page.goBack({waitUntil:'commit'});
+    await settled(page);await page.goBack({waitUntil:'commit'});await expect(page.getByRole('heading',{name:'Your complete study schedule'})).toBeVisible();
+    await page.goBack({waitUntil:'commit'});
     await expect.poll(()=>page.evaluate(()=>window.__courseWasCached)).toBe(true);
     if(broken)await expect(compareSavedControls(page,correct)).rejects.toThrow();else await compareSavedControls(page,correct);
   });
@@ -186,16 +188,21 @@ for(const broken of [false,true])test(broken?'the progress verifier rejects a st
   else await compareSavedControls(reopened,lessons[0].quiz.correct);
 });
 
-test('simultaneously queued practice saves retain both lessons after the real shared transaction is released',async({page,context})=>{
-  await open(page,'s01');const other=await context.newPage();await open(other,'s02');
-  await page.evaluate(key=>new Promise((ready,reject)=>{
+async function holdTransaction(page,...raw){
+  await page.evaluate(({key,write,raw})=>new Promise((ready,reject)=>{
     const opening=indexedDB.open(key,1);opening.onerror=()=>reject(opening.error);
     opening.onsuccess=()=>{const db=opening.result,transaction=db.transaction('records','readwrite'),store=transaction.objectStore('records');let held=true;
+      if(write)store.put(raw,'progress');
       window.releaseCourseTransaction=()=>{held=false;};
       const keepAlive=()=>{store.get('progress').onsuccess=()=>{ready();if(held)keepAlive();};};keepAlive();
       transaction.oncomplete=()=>db.close();transaction.onabort=()=>{db.close();reject(transaction.error);};
     };
-  }),key);
+  }),{key,write:raw.length>0,raw:raw[0]});
+}
+
+test('simultaneously queued practice saves retain both lessons after the real shared transaction is released',async({page,context})=>{
+  await open(page,'s01');const other=await context.newPage();await open(other,'s02');
+  await holdTransaction(page);
   try{
     await Promise.all([page.locator('#complete').check(),other.locator('#complete').check()]);
     await expect(page.locator('#save-status')).toHaveText('Saving progress...');await expect(other.locator('#save-status')).toHaveText('Saving progress...');
@@ -230,4 +237,38 @@ test('unavailable transactional storage preserves prototype bytes and exports me
   await open(page,'s01');await page.locator('#complete').check();await expect(page.locator('#save-status')).toContainText('memory only');
   const downloading=page.waitForEvent('download');await page.locator('#export-progress').click();const target=testInfo.outputPath('no-locks.json');await(await downloading).saveAs(target);
   expect(JSON.parse(fs.readFileSync(target,'utf8')).state.completed).toEqual(['s01']);expect(await page.evaluate(key=>localStorage.getItem(key),key)).toBe(original);
+});
+
+for(const notifications of [true,false])test(notifications?'another tab recovery clears obsolete corruption and new practice survives reload':'an explicit action revalidates recovered storage even when notifications are unavailable',async({page,context},testInfo)=>{
+  if(!notifications)await page.addInitScript(()=>{window.BroadcastChannel=undefined;const add=window.addEventListener;window.addEventListener=function(type,...args){if(type!=='focus')return add.call(this,type,...args);};});
+  await seedRecord(page,'{bad saved record');await open(page,'s01');const other=await context.newPage();await open(other,'s01');
+  const backup={format:'excel-zero-to-reporting-public',version:1,state:{current:'s01',completed:['s01'],answers:{s01:lessons[0].quiz.correct}}};
+  await importBackup(other,testInfo,'recovered.json',backup);await expect(other.locator('#backup-status')).toContainText('restored and saved');
+  if(notifications){await expect(page.locator('#damaged-progress')).toBeHidden();await expect(page.locator('#complete')).toBeChecked();}
+  await page.locator('#next-top').click();await expect(page.locator('#lesson-title')).toHaveText(lessons[1].title);await expect(page.locator('#save-status')).toContainText('Progress saved in this browser.');await page.locator('#complete').check();await settled(page);
+  await page.reload();await settled(page);await expect(page.locator('#complete')).toBeChecked();await expect(page.locator('#progress')).toHaveAttribute('value','2');
+});
+
+test('queued corruption followed by confirmed import does not poison subsequent uncheck',async({page},testInfo)=>{
+  await open(page,'s01');await holdTransaction(page,'{queued corrupt record');
+  try{
+    await page.locator('#complete').check();await expect(page.locator('#save-status')).toHaveText('Saving progress...');
+    const backup={format:'excel-zero-to-reporting-public',version:1,state:{current:'s01',completed:['s01'],answers:{}}};
+    await importBackup(page,testInfo,'queued-recovery.json',backup);await expect(page.locator('#backup-status')).toHaveText('Restoring backup...');
+  }finally{await page.evaluate(()=>window.releaseCourseTransaction());}
+  await expect(page.locator('#backup-status')).toContainText('restored and saved');await expect(page.locator('#damaged-progress')).toBeHidden();await settled(page);
+  await page.locator('#complete').uncheck();await settled(page);await page.reload();await settled(page);
+  await expect(page.locator('#complete')).not.toBeChecked();await expect(page.locator('#progress')).toHaveAttribute('value','0');
+});
+
+test('external recovery preserves unsaved memory as an explicit conflict instead of discarding it',async({page,context},testInfo)=>{
+  await seedRecord(page,'{bad saved record');await open(page,'s02');await page.locator('#complete').check();await settled(page);
+  const other=await context.newPage();await open(other,'s01');
+  const backup={format:'excel-zero-to-reporting-public',version:1,state:{current:'s01',completed:['s01'],answers:{}}};
+  await importBackup(other,testInfo,'saved-recovery.json',backup);await expect(other.locator('#backup-status')).toContainText('restored and saved');
+  await expect(page.locator('#save-status')).toContainText('This tab has unsaved changes in memory');await expect(page.locator('#complete')).toBeDisabled();
+  const downloading=page.waitForEvent('download');await page.locator('#export-progress').click();const target=testInfo.outputPath('preserved-memory.json');await(await downloading).saveAs(target);
+  expect(JSON.parse(fs.readFileSync(target,'utf8')).state.completed).toEqual(['s02']);expect(JSON.parse(await record(other)).completed).toEqual(['s01']);
+  page.once('dialog',d=>d.accept());await page.reload();await settled(page);
+  await expect(page.locator('#complete')).toBeEnabled();await expect(page.locator('#complete')).not.toBeChecked();await expect(page.locator('#progress')).toHaveAttribute('value','1');
 });
