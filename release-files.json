@@ -10,6 +10,7 @@
   "CHANGELOG.md",
   "LICENSE",
   "app.js",
+  "progress-store.js",
   "demos.js",
   "checks.js",
   "lessons.js",

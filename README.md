@@ -34,19 +34,22 @@ The default schedule is **17 weeks at six hours per week**, including review. Co
 - An asset report that refreshes from **12 records / 15 devices / RM15,000** to **15 records / 19 devices / RM17,700**, with a visible missing-owner exception.
 - A one-page handover explaining source files, record meaning, types, refresh order, checks, limitations and source-path recovery.
 
-These are spreadsheet skills and portfolio exercises. They are not payroll/tax/legal advice, a qualification, or a salary/job guarantee. Python and AI can be later tools; neither is a prerequisite. Do not let an agent invent source data, silently replace errors with zero, or claim a report works without checking the underlying records.
+These are spreadsheet skills and portfolio exercises. They are not payroll/tax/legal advice, a qualification, or a salary/job guarantee. Python programming and AI can be later tools; neither is needed for Excel practice. The launcher requires only the Python runtime. Do not let an agent invent source data, silently replace errors with zero, or claim a report works without checking the underlying records.
 
 ## Progress and backups
 
 Question answers and self-declared workbook practice are tracked separately. A quiz pass does not mark workbook practice complete. Navigation is not locked.
 
-- Progress is local to the browser profile and origin. Different addresses, protocols, ports and profiles have separate records. It does not sync or include Excel workbooks.
-- Save a **JSON backup weekly**, and before moving folders, changing browsers, clearing browser data or updating the course.
+- Progress is local to the browser profile and origin. Different addresses, protocols, ports and profiles have separate records. There is no cloud or cross-profile sync, and backups do not include Excel workbooks.
+- Wait for **Progress saved in this browser** before closing or reloading. **Saving progress...** means a save is still pending; a memory-only warning means it did not reach browser storage.
+- Tabs of this release coordinate saves and update only the selected lesson/action. Unchecking removes that lesson only; confirmed restore and recovery reset intentionally replace the whole record.
+- Save a **JSON backup weekly**, and before moving folders, changing browsers, clearing browser data or updating the course. Close old course tabs before updating.
 - Restore requires confirmation. Cancelling or selecting invalid/foreign JSON leaves current progress unchanged.
-- If storage is blocked or full, progress remains in memory and the page tells you to save a backup before closing.
+- Automatic saving needs working IndexedDB storage, supported by current Chrome, Edge and Brave. If it is unavailable, blocked or full, progress remains in memory and the page tells you to save a backup before closing.
 - An unreadable saved record is not overwritten. Export its raw bytes before starting fresh if you need them.
 - This public edition has a distinct storage key and backup identity. The previous private/local course remains unchanged; its backups are not misinterpreted as public-course completion.
 - Before switching from a file preview, another address or another browser, export JSON in the old view and restore it in the new one. There is no automatic cross-origin migration. File preview requires a backup before every exit, not only weekly.
+- Earlier public prototypes use a separate storage generation and cannot overwrite this release. Export JSON from the old public view and explicitly restore it here; its saved bytes are not automatically read, migrated or deleted. Private/local-course backups remain a different format.
 
 ## When something fails
 
