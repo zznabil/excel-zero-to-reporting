@@ -16,7 +16,43 @@ window.EXCEL_DEMOS = (() => {
   const number=x=>{if(typeof x!=='number'||!Number.isFinite(x))throw new Error('This calculation needs numeric inputs.');return x;};
   const numericText=value=>{const text=String(value).trim();if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(text)||!Number.isFinite(Number(text)))throw new Error('Use plain numeric text, without currency symbols or grouping (#VALUE! in Excel).');return Number(text);};
   const sum=xs=>xs.filter(x=>typeof x==='number').reduce((a,b)=>a+b,0);
-  const round=(n,d)=>Math.sign(n)*Math.round(Math.abs(n)*10**d+1e-10)/10**d;
+  const roundingOps=new Set(['roundProduct','matrixRates','sumRounded','gross']);
+  function inputValue(example,ref,text){
+    if(typeof example.cells[ref]!=='number')return text;
+    const value=Number(text);
+    if(text.trim()===''||!Number.isFinite(value)||Math.abs(value)>1e9)throw Error(`Enter a number between -1000000000 and 1000000000 in ${ref}.`);
+    return roundingOps.has(example.rule.op)?text:value;
+  }
+  const roundingLimit=detail=>new Error('Guided ROUND limit: '+detail+' Try this case in real Excel; this browser result is unsupported.');
+  function normaliseDecimal(units,power){
+    if(units===0n)return {units:0n,power:0};
+    while(units%10n===0n){units/=10n;power++;}
+    if((units<0n?-units:units).toString().length>15)throw roundingLimit('Each input and exact intermediate must fit 15 significant digits.');
+    if(power< -324||power>308)throw roundingLimit('The normalised decimal scale must be between -324 and 308.');
+    return {units,power};
+  }
+  function decimal(value){
+    const text=typeof value==='number'?String(number(value)):String(value).trim();
+    if(text.length>400)throw roundingLimit('Use at most 400 input characters.');
+    numericText(text);
+    const [mantissa,exponent='0']=text.toLowerCase().split('e'),power=Number(exponent);
+    if(Math.abs(power)>1000)throw roundingLimit('Use an explicit exponent between -1000 and 1000.');
+    const point=mantissa.indexOf('.'),places=point<0?0:mantissa.length-point-1;
+    return normaliseDecimal(BigInt(mantissa.replace('.','')),power-places);
+  }
+  const decimalProduct=(a,b)=>normaliseDecimal(a.units*b.units,a.power+b.power);
+  const decimalSum=(a,b)=>{
+    const power=Math.min(a.power,b.power);
+    return normaliseDecimal(a.units*10n**BigInt(a.power-power)+b.units*10n**BigInt(b.power-power),power);
+  };
+  function round(value,digits){
+    const shift=value.power+digits;
+    if(shift>=0)return value;
+    const divisor=10n**BigInt(-shift),absolute=value.units<0n?-value.units:value.units;
+    const rounded=absolute/divisor+(absolute%divisor*2n>=divisor?1n:0n);
+    return normaliseDecimal(value.units<0n?-rounded:rounded,-digits);
+  }
+  const decimalNumber=value=>Number(value.units.toString()+'e'+value.power);
   const serial=date=>(date.getTime()-Date.UTC(1899,11,30))/86400000;
   const dateForDay=(rule,cells)=>{const day=number(cells[rule.endDay]);if(!Number.isInteger(day)||day<1||day>31)throw new Error('Use a whole January day from 1 to 31.');return new Date(Date.UTC(rule.year,rule.month-1,day));};
   function calculate(example,cells){
@@ -34,9 +70,9 @@ window.EXCEL_DEMOS = (() => {
       case 'sumifs':case 'averageifs':{const selected=values(cells,r.sum).filter((_,i)=>matches(r.criteria,i));if(r.op==='averageifs'&&!selected.length)throw new Error('No matching numeric records (#DIV/0! in Excel).');result=r.op==='sumifs'?sum(selected):sum(selected)/selected.length;break;}
       case 'countifs':result=values(cells,r.criteria[0].range).filter((_,i)=>matches(r.criteria,i)).length;break;
       case 'countOr':{const a=values(cells,r.first),b=values(cells,r.second);result=a.filter((v,i)=>eq(v,r.equals)||number(b[i])>=r.minimum).length;break;}
-      case 'roundProduct':result=round(r.refs.reduce((n,ref)=>n*number(get(ref)),1),r.digits);break;
-      case 'matrixRates':{const rates=values(cells,r.rates);result=grid(cells,r.matrix).map(row=>row.map((v,i)=>round(number(v)*number(rates[i]),r.digits)));break;}
-      case 'sumRounded':result=sum(values(cells,r.range).map(v=>round(number(v),r.digits)));break;
+      case 'roundProduct':result=decimalNumber(round(r.refs.reduce((value,ref)=>decimalProduct(value,decimal(get(ref))),decimal(1)),r.digits));break;
+      case 'matrixRates':{const rates=values(cells,r.rates).map(decimal);result=grid(cells,r.matrix).map(row=>row.map((v,i)=>decimalNumber(round(decimalProduct(decimal(v),rates[i]),r.digits))));break;}
+      case 'sumRounded':result=decimalNumber(values(cells,r.range).reduce((value,v)=>decimalSum(value,round(decimal(v),r.digits)),decimal(0)));break;
       case 'workdays':{const end=dateForDay(r,cells);result=0;for(let d=new Date(Date.UTC(r.year,r.month-1,1));d<=end;d.setUTCDate(d.getUTCDate()+1))if(d.getUTCDay()!==0&&d.getUTCDay()!==6)result++;break;}
       case 'monthEnd':{const offset=number(get(r.offset));if(!Number.isInteger(offset)||Math.abs(offset)>1200)throw new Error('Use a whole month offset between -1200 and 1200.');result=serial(new Date(Date.UTC(r.year,r.month+offset,0)));break;}
       case 'overnight':{const time=text=>{const m=/^([01]\d|2[0-3]):([0-5]\d)$/.exec(text);if(!m)throw new Error('Use a 24-hour time such as 22:00 or 07:30.');return Number(m[1])*60+Number(m[2]);};result=((time(get(r.end))-time(get(r.start))+1440)%1440)/60;break;}
@@ -51,8 +87,8 @@ window.EXCEL_DEMOS = (() => {
       case 'extractNumber':case 'extractLookup':{const text=String(get(r.ref)),at=text.indexOf(r.delimiter);if(at<0)throw new Error('The required delimiter is missing (#N/A in Excel).');const n=numericText(text.slice(0,at));if(r.op==='extractNumber')result=n;else{const i=values(cells,r.keys).findIndex(v=>eq(v,n));result=i<0?r.missing:values(cells,r.values)[i];}break;}
       case 'missing':{const actual=values(cells,r.actual);const missing=values(cells,r.expected).filter(v=>!actual.some(a=>eq(a,v)));result=missing.length?missing.map(v=>[v]):[[r.none]];break;}
       case 'compareNumericText':result=numericText(get(r.first))>numericText(get(r.second))?'Win':'Not win';break;
-      case 'uniqueSort':{const unique=[];for(const v of values(cells,r.range))if(!unique.some(u=>eq(u,v)))unique.push(v);result=unique.sort((a,b)=>String(a).localeCompare(String(b),'en')).map(v=>[v]);break;}
-      case 'gross':result=round(number(get(r.hours))*number(get(r.rate))+number(get(r.sales))*number(get(r.commission)),2);break;
+      case 'uniqueSort':{const unique=[];for(const v of values(cells,r.range))if(!unique.some(u=>eq(u,v)))unique.push(v);result=unique.sort((a,b)=>a===''?1:b===''?-1:String(a).localeCompare(String(b),'en')).map(v=>[v===''?0:v]);break;}
+      case 'gross':{const hours=decimal(get(r.hours));if(hours.units<0n)throw new Error('This fictional pay example requires non-negative hours. Use real Excel for negative adjustments or deductions.');result=decimalNumber(round(decimalSum(decimalProduct(hours,decimal(get(r.rate))),decimalProduct(decimal(get(r.sales)),decimal(get(r.commission)))),2));break;}
       case 'share':{const list=values(cells,r.range),denominator=list.filter(v=>v!=='').length;if(!denominator)throw new Error('No populated responses (#DIV/0! in Excel).');result=list.filter(v=>criteriaEqual(v,get(r.key))).length/denominator;break;}
       case 'trim':result=String(get(r.ref)).replace(/ +/g,' ').replace(/^ +| +$/g,'');break;
       case 'sumproduct':{const b=values(cells,r.right);result=sum(values(cells,r.left).map((a,i)=>number(a)*number(b[i])));break;}
@@ -68,5 +104,5 @@ window.EXCEL_DEMOS = (() => {
     if(matrix.flat().some(v=>v===undefined||typeof v==='number'&&!Number.isFinite(v)))throw new Error('The example could not produce a valid result.');
     return matrix;
   }
-  return {address,name,grid,calculate};
+  return {address,name,grid,calculate,inputValue};
 })();

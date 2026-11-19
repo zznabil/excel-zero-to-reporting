@@ -804,7 +804,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s14",
     "title": "Excel ROUND",
-    "html": "<p><code>ROUND(number, digits)</code> changes the calculated value to a stated precision. Formatting to two decimal places only changes how the value appears.</p><h2>Round at the required stage</h2><p>If a rule says each invoice line is rounded to two decimals, use ROUND on each line before summing. If the rule instead says round only the final invoice total, follow that rule. The two methods can differ.</p><p>The example multiplies a quantity by a price and rounds the result to two decimal places. Keep the original unit price separate so you can explain where the rounded amount came from.</p><p class=\"note\">These are spreadsheet mechanics, not Malaysian payroll, tax or accounting policy. Obtain the actual business rounding rule before applying a calculation operationally.</p>",
+    "html": "<p><code>ROUND(number, digits)</code> changes the calculated value to a stated precision. Formatting to two decimal places only changes how the value appears.</p><h2>Round at the required stage</h2><p>If a rule says each invoice line is rounded to two decimals, use ROUND on each line before summing. If the rule instead says round only the final invoice total, follow that rule. The two methods can differ.</p><p>The example multiplies a quantity by a price and rounds the result to two decimal places. Keep the original unit price separate so you can explain where the rounded amount came from.</p><p class=\"note\">Browser boundary: this guided ROUND example uses exact decimals while each input and exact intermediate fits 15 significant digits, not 15 decimal places. Unsupported precision or scale clears the browser results and directs you to real Excel. This is a limit of the teaching calculator, not an Excel error or a restriction on workbook practice. Outputs are displayed to two decimal places.</p><p class=\"note\">These are spreadsheet mechanics, not Malaysian payroll, tax or accounting policy. Obtain the actual business rounding rule before applying a calculation operationally.</p>",
     "example": {
       "cells": {
         "A1": "Quantity",
@@ -813,6 +813,7 @@ window.EXCEL_TUTORIAL = [
         "B2": 1.235
       },
       "formula": "=ROUND(A2*B2,2)",
+      "display": "decimal2",
       "output": "C2",
       "rule": {
         "op": "roundProduct",
@@ -852,7 +853,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s15",
     "title": "Excel Spilled Arrays",
-    "html": "<p>A spilled formula returns a rectangle controlled by its top-left cell. Keep that destination clear and outside a Table calculated column.</p><h2>Two directions</h2><p>In the example each sales column uses the rate in the same column. The first corner is 100 × 10% = 10; the last is 400 × 20% = 80. Changing the second rate must not change first-column results.</p><p>Select the top-left result to edit the formula. #SPILL! often means blocked cells or merged cells. Inspect the obstruction before deleting anything; move valuable content instead.</p>",
+    "html": "<p>A spilled formula returns a rectangle controlled by its top-left cell. Keep that destination clear and outside a Table calculated column.</p><h2>Two directions</h2><p>In the example each sales column uses the rate in the same column. The first corner is 100 × 10% = 10; the last is 400 × 20% = 80. Changing the second rate must not change first-column results.</p><p>Select the top-left result to edit the formula. #SPILL! often means blocked cells or merged cells. Inspect the obstruction before deleting anything; move valuable content instead.</p><p class=\"note\">Browser boundary: this guided ROUND example uses exact decimals while each input and exact intermediate fits 15 significant digits, not 15 decimal places. Unsupported precision or scale clears the whole browser result; try that case in real Excel instead. Workbook practice is not restricted. Outputs are displayed to two decimal places.</p>",
     "example": {
       "cells": {
         "A1": "Week 1",
@@ -867,6 +868,7 @@ window.EXCEL_TUTORIAL = [
         "B6": 0.2
       },
       "formula": "=ROUND(A2:B3*A6:B6,2)",
+      "display": "decimal2",
       "output": "D2",
       "rule": {
         "op": "matrixRates",
@@ -904,7 +906,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s16",
     "title": "Excel Rounding Project",
-    "html": "<p>Rounding is a business rule, not a decoration. State whether to round each line before adding or round only the final total.</p><h2>Compare two valid questions</h2><p>Two amounts of 1.234 round separately to 1.23 + 1.23 = 2.46. Rounding their unrounded sum gives 2.47. The formulas answer different rules.</p><h2>Independent invoice</h2><p>Create three lines: quantity 3 at 12.345, quantity 2 at 8.675, and quantity 5 at 1.235. Calculate each line to two decimals before summing. Compare with rounding only the final sum and write which rule the report uses. This is fictional arithmetic, not a tax policy.</p>",
+    "html": "<p>Rounding is a business rule, not a decoration. State whether to round each line before adding or round only the final total.</p><h2>Compare two valid questions</h2><p>Two amounts of 1.234 round separately to 1.23 + 1.23 = 2.46. Rounding their unrounded sum gives 2.47. The formulas answer different rules.</p><h2>Independent invoice</h2><p>Create three lines: quantity 3 at 12.345, quantity 2 at 8.675, and quantity 5 at 1.235. Calculate each line to two decimals before summing. Compare with rounding only the final sum and write which rule the report uses. This is fictional arithmetic, not a tax policy.</p><p class=\"note\">Browser boundary: each input and exact decimal intermediate must fit 15 significant digits, not 15 decimal places. The example rounds each line before adding. Unsupported precision or scale clears the browser result and asks you to use real Excel; it does not claim that Excel rejects the input. Outputs are displayed to two decimal places.</p>",
     "example": {
       "cells": {
         "A1": "Unrounded line",
@@ -912,6 +914,7 @@ window.EXCEL_TUTORIAL = [
         "A3": 1.234
       },
       "formula": "=SUM(ROUND(A2:A3,2))",
+      "display": "decimal2",
       "output": "B2",
       "rule": {
         "op": "sumRounded",
@@ -1983,7 +1986,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s36",
     "title": "Excel UNIQUE and Dropdown Lists",
-    "html": "<p>UNIQUE builds a distinct list and SORT orders it. Put the spill outside a Table in clear space. Duplicate source rows remain in the source unless you explicitly remove them.</p><h2>Connect a dropdown</h2><p>Enter =SORT(UNIQUE(A2:A5)) in C2. Select E2 → Data → Data Validation → List and set Source to =$C$2#. The # references the whole spill. Test a new source value and inspect the list.</p><p>Validation controls entry. Conditional Formatting changes appearance. Neither proves that your imported source records are complete or correct.</p>",
+    "html": "<p>UNIQUE builds a distinct list and SORT orders it. Put the spill outside a Table in clear space. Duplicate source rows remain in the source unless you explicitly remove them.</p><h2>Connect a dropdown</h2><p>Enter =SORT(UNIQUE(A2:A5)) in C2. Select E2 → Data → Data Validation → List and set Source to =$C$2#. The # references the whole spill. Test a new source value and inspect the list.</p><p>For this example, clearing A5 leaves Ali, Bo and a final numeric 0 in the spill, not an empty dropdown option. Inspect the source before using the list.</p><p>Validation controls entry. Conditional Formatting changes appearance. Neither proves that your imported source records are complete or correct.</p>",
     "example": {
       "cells": {
         "A1": "Name",
@@ -2071,7 +2074,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s38",
     "title": "Excel Payroll Model Exercise",
-    "html": "<p>A model needs distinct units: Hours, HourlyRate, Sales and CommissionRate. Keep changing assumptions in labelled cells.</p><h2>Fictional gross amount</h2><p>Eight hours at 25 plus 3% of 1000 is 230. Two more hours should add 50 without changing the commission. Round only at the stage required by the stated rule.</p><p>This example teaches arithmetic. It does not implement Malaysian payroll, statutory deductions, tax, leave or overtime law. Do not use training rates to make real pay decisions.</p>",
+    "html": "<p>A model needs distinct units: Hours, HourlyRate, Sales and CommissionRate. Keep changing assumptions in labelled cells.</p><h2>Fictional gross amount</h2><p>Eight hours at 25 plus 3% of 1000 is 230. Two more hours should add 50 without changing the commission. Round only at the stage required by the stated rule.</p><p>Use non-negative hours in this browser model. It has no negative adjustment or deduction terms. Use a separate real Excel model for those cases.</p><p class=\"note\">Browser boundary: each input and each exact product or sum before rounding must fit 15 significant digits, not 15 decimal places. Even a permitted input can produce an unsupported intermediate. The browser then clears its result and directs you to Excel instead of showing a plausible estimate. Supported outputs retain their cents and are displayed to two decimal places. Native workbook practice is not restricted.</p><p>This example teaches arithmetic. It does not implement Malaysian payroll, statutory deductions, tax, leave or overtime law. Do not use training rates to make real pay decisions.</p>",
     "example": {
       "cells": {
         "A1": "Hours",
@@ -2084,6 +2087,7 @@ window.EXCEL_TUTORIAL = [
         "D2": 0.03
       },
       "formula": "=ROUND(A2*B2+C2*D2,2)",
+      "display": "decimal2",
       "output": "E2",
       "rule": {
         "op": "gross",
@@ -2428,7 +2432,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s44",
     "title": "Excel Clean and Refresh a Query",
-    "html": "<p>Recurring cleanup belongs in query steps, not manual edits to its loaded Table. A refresh can overwrite the latter.</p><h2>Clean without guessing</h2><ol><li>Data → Queries &amp; Connections → right-click the request query → Edit.</li><li>Select Department → Transform → Format → Trim. Then Uppercase only because these supplied department codes have an agreed uppercase convention.</li><li>Keep the original Description; do not split arbitrary human names or force their capitalisation as an identity repair.</li><li>Close &amp; Load. Check the record count and Amount total stayed unchanged.</li></ol><p>Excel TRIM collapses ordinary internal spaces as well as ends. Power Query Text.Trim normally trims the ends, not all internal runs. Non-breaking spaces need deliberate handling. Do not assume the two operations are identical.</p>",
+    "html": "<p>Recurring cleanup belongs in query steps, not manual edits to its loaded Table. A refresh can overwrite the latter.</p><h2>Clean without guessing</h2><ol><li>Data → Queries &amp; Connections → right-click the request query → Edit.</li><li>Select Department → Transform → Format → Trim. Then Uppercase only because these supplied department codes have an agreed uppercase convention.</li><li>Keep the original Description; do not split arbitrary human names or force their capitalisation as an identity repair.</li><li>Close &amp; Load. Check the record count and Amount total stayed unchanged.</li></ol><p>Excel TRIM collapses ordinary internal spaces as well as ends. Power Query Text.Trim normally trims the ends, not all internal runs. Non-breaking spaces need deliberate handling. Do not assume the two operations are identical.</p><h2>Test refresh in a disposable copy</h2><p>Keep the supplied CSV and your original report unchanged. Copying a workbook does not change the source path stored in its query.</p><ol><li>Save and close My-work/Requests-report.xlsx.</li><li>Create My-work/Requests-copy. Copy Requests-report.xlsx and the supplied Data/Office-requests.csv into that folder.</li><li>Open only My-work/Requests-copy/Requests-report.xlsx. Choose Data → Get Data → Data Source Settings → Data sources in current workbook. Select the original Office-requests.csv source → Change Source → Browse to My-work/Requests-copy/Office-requests.csv. Confirm the copied path. Do not clear permissions or change global privacy settings.</li><li>Refresh the copied query and wait for its Table to finish loading. Confirm eight records, Amount total RM1170 and R006 Department FINANCE.</li><li>Open only the copied Office-requests.csv in a plain-text editor. In record R006 change the Department field from FINANCE to HR. Preserve the other fields, six-column comma-delimited structure and UTF-8 encoding, then save the CSV.</li><li>Refresh the copied query again and wait for loaded rows. Refresh any PivotTable that reads this Table afterwards.</li><li>Inspect the loaded R006 row: Department must be HR. Reconcile eight records and RM1170 total, with HR RM500 and FINANCE RM150. An unchanged grand total alone does not prove that the new source was read.</li><li>Save and close the copied workbook. Check that the supplied original CSV still has R006 FINANCE. Reopen the original Requests-report.xlsx: its own source binding and records must remain unchanged, with HR RM400 and FINANCE RM250 after normalisation.</li></ol>",
     "example": {
       "cells": {
         "A1": "Raw name",
@@ -2460,9 +2464,9 @@ window.EXCEL_TUTORIAL = [
       "explain": "Recorded transformations can be reapplied to a later export. Manual loaded-result edits are not a reliable refresh process."
     },
     "practice": [
-      "Edit the existing request query: trim Department, then use its agreed uppercase codes.",
-      "Refresh and verify the same eight records and total Amount.",
-      "In a copy change a source department code, refresh and inspect the new loaded value."
+      "Edit the existing request query: trim Department, then use its agreed uppercase codes. Save the original report.",
+      "Follow the disposable-copy sequence above. Copy both workbook and CSV, then explicitly bind only the copied workbook to the copied CSV before editing it.",
+      "Change R006 to HR only in the copied CSV, refresh and inspect the loaded row and department totals. Verify eight records and RM1170, then check the original CSV and report remain unchanged."
     ],
     "module": "09",
     "minutes": 90

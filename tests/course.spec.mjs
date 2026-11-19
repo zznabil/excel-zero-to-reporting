@@ -63,6 +63,41 @@ test('all lessons: native results, edits, reset, feedback, navigation and persis
   await expect(page.locator('#next')).toBeDisabled();await page.reload();await expect(page.locator('#progress')).toHaveAttribute('value',String(lessons.length));await expect(page.locator('#quiz-progress')).toContainText(`${lessons.length} of ${lessons.length}`);
   await page.locator('#previous-top').click();await expect(page.locator('#lesson-title')).toHaveText(lessons.at(-2).title);await page.goBack();await expect(page.locator('#lesson-title')).toHaveText(lessons.at(-1).title);expect(errors).toEqual([]);
 });
+test('editable UNIQUE blanks and rounding near ties retain native Excel results',async({page})=>{
+  await open(page,'s36');await expect(page.locator('[data-result]')).toHaveText(['Ali','Bo','Chen']);
+  await page.locator('[data-input="A5"]').fill('');await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('Calculated');await expect(page.locator('[data-result]')).toHaveText(['Ali','Bo','0']);
+  await page.locator('[data-input="A5"]').fill('Bo');await page.locator('#run-example').click();await expect(page.locator('[data-result]')).toHaveText(['Ali','Bo']);
+  await open(page,'s16');
+  for(const [value,result]of [['1.234','2.46'],['1.2349999999995','2.46'],['1.235','2.47']]){
+    await page.locator('[data-input="A3"]').fill(value);await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('Calculated');await expect(page.locator('[data-result]')).toHaveText([result]);
+  }
+});
+for(const viewport of [{width:1438,height:1000},{width:1024,height:768},{width:390,height:844}])test(`remote progress preserves a keyboard-focused topic at ${viewport.width}px`,async({page,context},testInfo)=>{
+  await page.setViewportSize(viewport);await open(page,'s01');const other=await context.newPage();
+  try{
+    await open(other,'s02');if(await page.locator('#menu').isVisible())await page.locator('#menu').click();
+    await page.locator('#topic-search').fill('Freeze Panes');await page.locator('#topic-search').press('Tab');const topic=page.locator('[data-session="x01"]');await expect(topic).toBeFocused();
+    await page.screenshot({path:testInfo.outputPath('focused-topic-before.png')});
+    await other.locator('#complete').check();await settled(other);await expect(page.locator('#progress')).toHaveAttribute('value','1');await expect(topic).toBeFocused();expect(JSON.parse(await record(page)).completed).toEqual(['s02']);
+    await page.screenshot({path:testInfo.outputPath('focused-topic-after.png')});
+  }finally{await other.close();}
+});
+for(const viewport of [{width:1438,height:1000},{width:1024,height:768},{width:390,height:844}])test(`bounded ROUND errors, recovery and visible cents at ${viewport.width}px`,async({page},testInfo)=>{
+  await page.setViewportSize(viewport);await open(page,'s16');
+  for(const text of ['1.2349999999999999999','1e-10000000','1e-400','0'.repeat(401)+'1']){
+    await page.locator('[data-input="A3"]').fill(text);await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('Guided ROUND limit');await expect(page.locator('.output')).toHaveText(['—']);await expect(page.locator('[data-input="A3"]')).toHaveValue(text);
+  }
+  await page.locator('#example-status').scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath('round-limit-no-stale-result.png')});
+  await page.locator('[data-input="A3"]').fill('1.235');await page.locator('#run-example').click();await expect(page.locator('[data-result]')).toHaveText(['2.47']);await page.locator('#reset-example').click();await expect(page.locator('[data-result]')).toHaveText(['2.46']);
+  await open(page,'s38');await page.locator('[data-input="A2"]').fill('-1.2002');await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('non-negative hours');await expect(page.locator('.output')).toHaveText(['—']);
+  await page.locator('[data-input="A2"]').fill('8.00019999999999');await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('Guided ROUND limit');await expect(page.locator('.output')).toHaveText(['—']);
+  await page.locator('[data-input="A2"]').fill('8.0002');await page.locator('#run-example').click();await expect(page.locator('[data-result]')).toHaveText(['230.01']);
+  await page.locator('[data-input="A2"]').fill('999999999.9996');await page.locator('#run-example').click();await expect(page.locator('[data-result]')).toHaveText(['25000000029.99']);await page.locator('[data-result]').scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath('pay-cents-retained.png')});
+  await open(page,'s15');await page.locator('[data-input="B6"]').fill('0.200024999999999999');await page.locator('#run-example').click();await expect(page.locator('#example-status')).toContainText('Guided ROUND limit');await expect(page.locator('.output')).toHaveText(['—','—','—','—']);
+  await page.locator('#reset-example').click();await expect(page.locator('[data-result]')).toHaveText(['10.00','40.00','30.00','80.00']);
+  await page.locator('[data-input="B6"]').fill('999999999.999975');await page.locator('#run-example').click();await expect(page.locator('[data-result]')).toHaveText(['10.00','200000000000.00','30.00','399999999999.99']);await page.locator('[data-result="E3"]').scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath('spill-cents-retained.png')});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+});
 test('genuine backup download, restore, cancellation, foreign record and legacy isolation',async({page},testInfo)=>{
   const legacy=JSON.stringify({current:'s02',completed:['s01'],positions:{s02:225},answers:{s01:1}});
   const prototypeKey='excel-zero-to-reporting-public-v1';

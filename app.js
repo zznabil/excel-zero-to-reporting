@@ -78,6 +78,7 @@
     $('quiz-progress').textContent=`${correct} of ${lessons.length} tutorial questions checked correctly. Workbook practice and questions are tracked separately.`;
   }
   function rail(){
+    const list=$('session-list'),focused=list.contains(document.activeElement)?document.activeElement.dataset.session:null;
     const query=$('topic-search').value.trim().toLowerCase(),fragment=document.createDocumentFragment();let count=0;
     for(const [module,title]of Object.entries(modules).sort(([a],[b])=>a.localeCompare(b))){
       const matches=lessons.filter(l=>l.module===module&&`${l.title} ${title}`.toLowerCase().includes(query));if(!matches.length)continue;
@@ -87,7 +88,8 @@
         a.addEventListener('click',event=>{event.preventDefault();go(l.id);});group.append(a);count++;
       }fragment.append(group);
     }
-    $('session-list').replaceChildren(fragment);$('search-status').textContent=query?`${count} matching topics${count?'':'. Clear the search to see all lessons.'}`:'';
+    list.replaceChildren(fragment);$('search-status').textContent=query?`${count} matching topics${count?'':'. Clear the search to see all lessons.'}`:'';
+    if(focused)list.querySelector(`[data-session="${focused}"]`)?.focus({preventScroll:true});
   }
   function valueText(value,format){
     if(typeof value!=='number')return String(value);
@@ -111,7 +113,7 @@
     }table.append(body);
   }
   function run(){
-    try{for(const input of $('example-sheet').querySelectorAll('input')){if(input.type==='number'){const n=Number(input.value);if(input.value.trim()===''||!Number.isFinite(n)||Math.abs(n)>1e9)throw Error(`Enter a number between -1000000000 and 1000000000 in ${input.dataset.input}.`);cells[input.dataset.input]=n;}else cells[input.dataset.input]=input.value;}
+    try{for(const input of $('example-sheet').querySelectorAll('input'))cells[input.dataset.input]=demos.inputValue(current.example,input.dataset.input,input.value);
       const result=demos.calculate(current.example,cells);renderExample(result);$('example-status').className='';$('example-status').textContent=`Calculated in ${current.example.output}${result.length>1||result[0].length>1?' and its spilled cells':''}. Change an input to explore the rule.`;
     }catch(error){$('example-status').className='error';$('example-status').textContent=error.message;for(const out of $('example-sheet').querySelectorAll('.output'))out.textContent='—';}
   }
