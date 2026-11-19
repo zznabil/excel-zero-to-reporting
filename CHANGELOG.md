@@ -1,5 +1,13 @@
 # Changes
 
+## 1.0.1
+
+- Correct the UNIQUE/SORT demo when an editable source name is cleared: the blank sorts last and spills as numeric zero, as in native Excel. Explain that result before the learner builds a dropdown.
+- Replace the fixed rounding bias with magnitude-scaled binary-noise handling. Preserve below-tie values, decimal ties, negative products and large integral inputs; add native-measured boundary regressions.
+- Teach a complete disposable request-report experiment: copy both files, explicitly rebind only the copied query, change R006 in the copied CSV, refresh in order and check the loaded row, department totals and unchanged originals.
+- Preserve keyboard focus on a visible topic link during another tab's progress update. Add real two-tab regressions at desktop, tablet and phone widths.
+- Keep the published 1.0.0 tag and assets unchanged. Candidate and release acceptance are separate; consult versioned release notes for the actual judgement and evidence limits.
+
 ## 1.0.0
 
 - Separate portable public edition: 57 core lessons and three optional advanced lessons; no required local/private course files.

@@ -78,6 +78,7 @@
     $('quiz-progress').textContent=`${correct} of ${lessons.length} tutorial questions checked correctly. Workbook practice and questions are tracked separately.`;
   }
   function rail(){
+    const list=$('session-list'),focused=list.contains(document.activeElement)?document.activeElement.dataset.session:null;
     const query=$('topic-search').value.trim().toLowerCase(),fragment=document.createDocumentFragment();let count=0;
     for(const [module,title]of Object.entries(modules).sort(([a],[b])=>a.localeCompare(b))){
       const matches=lessons.filter(l=>l.module===module&&`${l.title} ${title}`.toLowerCase().includes(query));if(!matches.length)continue;
@@ -87,7 +88,8 @@
         a.addEventListener('click',event=>{event.preventDefault();go(l.id);});group.append(a);count++;
       }fragment.append(group);
     }
-    $('session-list').replaceChildren(fragment);$('search-status').textContent=query?`${count} matching topics${count?'':'. Clear the search to see all lessons.'}`:'';
+    list.replaceChildren(fragment);$('search-status').textContent=query?`${count} matching topics${count?'':'. Clear the search to see all lessons.'}`:'';
+    if(focused)list.querySelector(`[data-session="${focused}"]`)?.focus({preventScroll:true});
   }
   function valueText(value,format){
     if(typeof value!=='number')return String(value);

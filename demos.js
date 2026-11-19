@@ -16,7 +16,13 @@ window.EXCEL_DEMOS = (() => {
   const number=x=>{if(typeof x!=='number'||!Number.isFinite(x))throw new Error('This calculation needs numeric inputs.');return x;};
   const numericText=value=>{const text=String(value).trim();if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(text)||!Number.isFinite(Number(text)))throw new Error('Use plain numeric text, without currency symbols or grouping (#VALUE! in Excel).');return Number(text);};
   const sum=xs=>xs.filter(x=>typeof x==='number').reduce((a,b)=>a+b,0);
-  const round=(n,d)=>Math.sign(n)*Math.round(Math.abs(n)*10**d+1e-10)/10**d;
+  const round=(n,d)=>{
+    const factor=10**d,scaled=Math.abs(n)*factor;
+    if(!Number.isFinite(scaled)||scaled>=Number.MAX_SAFE_INTEGER)return n;
+    const fraction=scaled%1;
+    // Correct sub-half binary noise at this magnitude, not every value by a fixed bias.
+    return Math.sign(n)*Math.round(scaled+(fraction>0&&fraction<0.5?Number.EPSILON*scaled:0))/factor;
+  };
   const serial=date=>(date.getTime()-Date.UTC(1899,11,30))/86400000;
   const dateForDay=(rule,cells)=>{const day=number(cells[rule.endDay]);if(!Number.isInteger(day)||day<1||day>31)throw new Error('Use a whole January day from 1 to 31.');return new Date(Date.UTC(rule.year,rule.month-1,day));};
   function calculate(example,cells){
@@ -51,7 +57,7 @@ window.EXCEL_DEMOS = (() => {
       case 'extractNumber':case 'extractLookup':{const text=String(get(r.ref)),at=text.indexOf(r.delimiter);if(at<0)throw new Error('The required delimiter is missing (#N/A in Excel).');const n=numericText(text.slice(0,at));if(r.op==='extractNumber')result=n;else{const i=values(cells,r.keys).findIndex(v=>eq(v,n));result=i<0?r.missing:values(cells,r.values)[i];}break;}
       case 'missing':{const actual=values(cells,r.actual);const missing=values(cells,r.expected).filter(v=>!actual.some(a=>eq(a,v)));result=missing.length?missing.map(v=>[v]):[[r.none]];break;}
       case 'compareNumericText':result=numericText(get(r.first))>numericText(get(r.second))?'Win':'Not win';break;
-      case 'uniqueSort':{const unique=[];for(const v of values(cells,r.range))if(!unique.some(u=>eq(u,v)))unique.push(v);result=unique.sort((a,b)=>String(a).localeCompare(String(b),'en')).map(v=>[v]);break;}
+      case 'uniqueSort':{const unique=[];for(const v of values(cells,r.range))if(!unique.some(u=>eq(u,v)))unique.push(v);result=unique.sort((a,b)=>a===''?1:b===''?-1:String(a).localeCompare(String(b),'en')).map(v=>[v===''?0:v]);break;}
       case 'gross':result=round(number(get(r.hours))*number(get(r.rate))+number(get(r.sales))*number(get(r.commission)),2);break;
       case 'share':{const list=values(cells,r.range),denominator=list.filter(v=>v!=='').length;if(!denominator)throw new Error('No populated responses (#DIV/0! in Excel).');result=list.filter(v=>criteriaEqual(v,get(r.key))).length/denominator;break;}
       case 'trim':result=String(get(r.ref)).replace(/ +/g,' ').replace(/^ +| +$/g,'');break;

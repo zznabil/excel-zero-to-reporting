@@ -1983,7 +1983,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s36",
     "title": "Excel UNIQUE and Dropdown Lists",
-    "html": "<p>UNIQUE builds a distinct list and SORT orders it. Put the spill outside a Table in clear space. Duplicate source rows remain in the source unless you explicitly remove them.</p><h2>Connect a dropdown</h2><p>Enter =SORT(UNIQUE(A2:A5)) in C2. Select E2 → Data → Data Validation → List and set Source to =$C$2#. The # references the whole spill. Test a new source value and inspect the list.</p><p>Validation controls entry. Conditional Formatting changes appearance. Neither proves that your imported source records are complete or correct.</p>",
+    "html": "<p>UNIQUE builds a distinct list and SORT orders it. Put the spill outside a Table in clear space. Duplicate source rows remain in the source unless you explicitly remove them.</p><h2>Connect a dropdown</h2><p>Enter =SORT(UNIQUE(A2:A5)) in C2. Select E2 → Data → Data Validation → List and set Source to =$C$2#. The # references the whole spill. Test a new source value and inspect the list.</p><p>For this example, clearing A5 leaves Ali, Bo and a final numeric 0 in the spill, not an empty dropdown option. Inspect the source before using the list.</p><p>Validation controls entry. Conditional Formatting changes appearance. Neither proves that your imported source records are complete or correct.</p>",
     "example": {
       "cells": {
         "A1": "Name",
@@ -2428,7 +2428,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s44",
     "title": "Excel Clean and Refresh a Query",
-    "html": "<p>Recurring cleanup belongs in query steps, not manual edits to its loaded Table. A refresh can overwrite the latter.</p><h2>Clean without guessing</h2><ol><li>Data → Queries &amp; Connections → right-click the request query → Edit.</li><li>Select Department → Transform → Format → Trim. Then Uppercase only because these supplied department codes have an agreed uppercase convention.</li><li>Keep the original Description; do not split arbitrary human names or force their capitalisation as an identity repair.</li><li>Close &amp; Load. Check the record count and Amount total stayed unchanged.</li></ol><p>Excel TRIM collapses ordinary internal spaces as well as ends. Power Query Text.Trim normally trims the ends, not all internal runs. Non-breaking spaces need deliberate handling. Do not assume the two operations are identical.</p>",
+    "html": "<p>Recurring cleanup belongs in query steps, not manual edits to its loaded Table. A refresh can overwrite the latter.</p><h2>Clean without guessing</h2><ol><li>Data → Queries &amp; Connections → right-click the request query → Edit.</li><li>Select Department → Transform → Format → Trim. Then Uppercase only because these supplied department codes have an agreed uppercase convention.</li><li>Keep the original Description; do not split arbitrary human names or force their capitalisation as an identity repair.</li><li>Close &amp; Load. Check the record count and Amount total stayed unchanged.</li></ol><p>Excel TRIM collapses ordinary internal spaces as well as ends. Power Query Text.Trim normally trims the ends, not all internal runs. Non-breaking spaces need deliberate handling. Do not assume the two operations are identical.</p><h2>Test refresh in a disposable copy</h2><p>Keep the supplied CSV and your original report unchanged. Copying a workbook does not change the source path stored in its query.</p><ol><li>Save and close My-work/Requests-report.xlsx.</li><li>Create My-work/Requests-copy. Copy Requests-report.xlsx and the supplied Data/Office-requests.csv into that folder.</li><li>Open only My-work/Requests-copy/Requests-report.xlsx. Choose Data → Get Data → Data Source Settings → Data sources in current workbook. Select the original Office-requests.csv source → Change Source → Browse to My-work/Requests-copy/Office-requests.csv. Confirm the copied path. Do not clear permissions or change global privacy settings.</li><li>Refresh the copied query and wait for its Table to finish loading. Confirm eight records, Amount total RM1170 and R006 Department FINANCE.</li><li>Open only the copied Office-requests.csv in a plain-text editor. In record R006 change the Department field from FINANCE to HR. Preserve the other fields, six-column comma-delimited structure and UTF-8 encoding, then save the CSV.</li><li>Refresh the copied query again and wait for loaded rows. Refresh any PivotTable that reads this Table afterwards.</li><li>Inspect the loaded R006 row: Department must be HR. Reconcile eight records and RM1170 total, with HR RM500 and FINANCE RM150. An unchanged grand total alone does not prove that the new source was read.</li><li>Save and close the copied workbook. Check that the supplied original CSV still has R006 FINANCE. Reopen the original Requests-report.xlsx: its own source binding and records must remain unchanged, with HR RM400 and FINANCE RM250 after normalisation.</li></ol>",
     "example": {
       "cells": {
         "A1": "Raw name",
@@ -2460,9 +2460,9 @@ window.EXCEL_TUTORIAL = [
       "explain": "Recorded transformations can be reapplied to a later export. Manual loaded-result edits are not a reliable refresh process."
     },
     "practice": [
-      "Edit the existing request query: trim Department, then use its agreed uppercase codes.",
-      "Refresh and verify the same eight records and total Amount.",
-      "In a copy change a source department code, refresh and inspect the new loaded value."
+      "Edit the existing request query: trim Department, then use its agreed uppercase codes. Save the original report.",
+      "Follow the disposable-copy sequence above. Copy both workbook and CSV, then explicitly bind only the copied workbook to the copied CSV before editing it.",
+      "Change R006 to HR only in the copied CSV, refresh and inspect the loaded row and department totals. Verify eight records and RM1170, then check the original CSV and report remain unchanged."
     ],
     "module": "09",
     "minutes": 90

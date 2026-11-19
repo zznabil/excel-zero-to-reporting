@@ -29,6 +29,21 @@ test('criteria limitations stay visible rather than returning misleading zeros',
   for(const criterion of ['*','I?','~*','>500','=IT'])assert.throws(()=>demos.calculate(e,{...e.cells,D2:criterion}),/literal criteria/);
   compare(demos.calculate(e,{...e.cells,D2:'Absent'}),[[0]]);
 });
+test('a cleared UNIQUE source spills numeric zero after the populated names',()=>{
+  const e=lessons.find(l=>l.id==='s36').example;
+  assert.deepEqual(plain(demos.calculate(e,e.cells)),[['Ali'],['Bo'],['Chen']]);
+  assert.deepEqual(plain(demos.calculate(e,{...e.cells,A5:''})),[['Ali'],['Bo'],[0]]);
+  assert.deepEqual(plain(demos.calculate(e,{...e.cells,A5:'Bo'})),[['Ali'],['Bo']]);
+});
+test('native-measured rounding distinguishes near ties from binary product noise',()=>{
+  const invoice=lessons.find(l=>l.id==='s16').example;
+  for(const [value,total]of [[1.234,2.46],[1.2349999999995,2.46],[1.235,2.47]])compare(demos.calculate(invoice,{...invoice.cells,A3:value}),[[total]]);
+  const product=lessons.find(l=>l.id==='s14').example;
+  // Independently measured in Excel16.0.20527: direct cells and ROUND(A2*B2,2).
+  for(const [a,b,result]of [[0.7,0.05,0.04],[-0.7,0.05,-0.04],[1.005,1,1.01],[-1.235,1,-1.24],[1.23499999999995,1,1.23],[1.234999999999995,1,1.23],[1.235000000000005,1,1.24],[1e20,1,1e20],[1.2349999999999999,1,1.24],[1.2349999999999997,1,1.24],[1.0049999999999997,1,1.01],[0.034999999999999996,1,0.04],[0.03499999999999999,1,0.04]]){
+    compare(demos.calculate(product,{...product.cells,A2:a,B2:b}),[[result]]);
+  }
+});
 test('no-match, missing delimiter, non-numeric text and zero denominators remain distinct',()=>{
   const filter=lessons.find(l=>l.id==='s28').example;compare(demos.calculate(filter,{...filter.cells,E2:'Absent'}),[['No matches']]);
   const extraction=lessons.find(l=>l.id==='s33').example;assert.throws(()=>demos.calculate(extraction,{...extraction.cells,A2:'No separator'}),/delimiter/);
