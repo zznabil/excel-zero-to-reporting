@@ -804,7 +804,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s14",
     "title": "Excel ROUND",
-    "html": "<p><code>ROUND(number, digits)</code> changes the calculated value to a stated precision. Formatting to two decimal places only changes how the value appears.</p><h2>Round at the required stage</h2><p>If a rule says each invoice line is rounded to two decimals, use ROUND on each line before summing. If the rule instead says round only the final invoice total, follow that rule. The two methods can differ.</p><p>The example multiplies a quantity by a price and rounds the result to two decimal places. Keep the original unit price separate so you can explain where the rounded amount came from.</p><p class=\"note\">These are spreadsheet mechanics, not Malaysian payroll, tax or accounting policy. Obtain the actual business rounding rule before applying a calculation operationally.</p>",
+    "html": "<p><code>ROUND(number, digits)</code> changes the calculated value to a stated precision. Formatting to two decimal places only changes how the value appears.</p><h2>Round at the required stage</h2><p>If a rule says each invoice line is rounded to two decimals, use ROUND on each line before summing. If the rule instead says round only the final invoice total, follow that rule. The two methods can differ.</p><p>The example multiplies a quantity by a price and rounds the result to two decimal places. Keep the original unit price separate so you can explain where the rounded amount came from.</p><p class=\"note\">Browser boundary: this guided ROUND example uses exact decimals while each input and exact intermediate fits 15 significant digits, not 15 decimal places. Unsupported precision or scale clears the browser results and directs you to real Excel. This is a limit of the teaching calculator, not an Excel error or a restriction on workbook practice. Outputs are displayed to two decimal places.</p><p class=\"note\">These are spreadsheet mechanics, not Malaysian payroll, tax or accounting policy. Obtain the actual business rounding rule before applying a calculation operationally.</p>",
     "example": {
       "cells": {
         "A1": "Quantity",
@@ -813,6 +813,7 @@ window.EXCEL_TUTORIAL = [
         "B2": 1.235
       },
       "formula": "=ROUND(A2*B2,2)",
+      "display": "decimal2",
       "output": "C2",
       "rule": {
         "op": "roundProduct",
@@ -852,7 +853,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s15",
     "title": "Excel Spilled Arrays",
-    "html": "<p>A spilled formula returns a rectangle controlled by its top-left cell. Keep that destination clear and outside a Table calculated column.</p><h2>Two directions</h2><p>In the example each sales column uses the rate in the same column. The first corner is 100 × 10% = 10; the last is 400 × 20% = 80. Changing the second rate must not change first-column results.</p><p>Select the top-left result to edit the formula. #SPILL! often means blocked cells or merged cells. Inspect the obstruction before deleting anything; move valuable content instead.</p>",
+    "html": "<p>A spilled formula returns a rectangle controlled by its top-left cell. Keep that destination clear and outside a Table calculated column.</p><h2>Two directions</h2><p>In the example each sales column uses the rate in the same column. The first corner is 100 × 10% = 10; the last is 400 × 20% = 80. Changing the second rate must not change first-column results.</p><p>Select the top-left result to edit the formula. #SPILL! often means blocked cells or merged cells. Inspect the obstruction before deleting anything; move valuable content instead.</p><p class=\"note\">Browser boundary: this guided ROUND example uses exact decimals while each input and exact intermediate fits 15 significant digits, not 15 decimal places. Unsupported precision or scale clears the whole browser result; try that case in real Excel instead. Workbook practice is not restricted. Outputs are displayed to two decimal places.</p>",
     "example": {
       "cells": {
         "A1": "Week 1",
@@ -867,6 +868,7 @@ window.EXCEL_TUTORIAL = [
         "B6": 0.2
       },
       "formula": "=ROUND(A2:B3*A6:B6,2)",
+      "display": "decimal2",
       "output": "D2",
       "rule": {
         "op": "matrixRates",
@@ -904,7 +906,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s16",
     "title": "Excel Rounding Project",
-    "html": "<p>Rounding is a business rule, not a decoration. State whether to round each line before adding or round only the final total.</p><h2>Compare two valid questions</h2><p>Two amounts of 1.234 round separately to 1.23 + 1.23 = 2.46. Rounding their unrounded sum gives 2.47. The formulas answer different rules.</p><h2>Independent invoice</h2><p>Create three lines: quantity 3 at 12.345, quantity 2 at 8.675, and quantity 5 at 1.235. Calculate each line to two decimals before summing. Compare with rounding only the final sum and write which rule the report uses. This is fictional arithmetic, not a tax policy.</p>",
+    "html": "<p>Rounding is a business rule, not a decoration. State whether to round each line before adding or round only the final total.</p><h2>Compare two valid questions</h2><p>Two amounts of 1.234 round separately to 1.23 + 1.23 = 2.46. Rounding their unrounded sum gives 2.47. The formulas answer different rules.</p><h2>Independent invoice</h2><p>Create three lines: quantity 3 at 12.345, quantity 2 at 8.675, and quantity 5 at 1.235. Calculate each line to two decimals before summing. Compare with rounding only the final sum and write which rule the report uses. This is fictional arithmetic, not a tax policy.</p><p class=\"note\">Browser boundary: each input and exact decimal intermediate must fit 15 significant digits, not 15 decimal places. The example rounds each line before adding. Unsupported precision or scale clears the browser result and asks you to use real Excel; it does not claim that Excel rejects the input. Outputs are displayed to two decimal places.</p>",
     "example": {
       "cells": {
         "A1": "Unrounded line",
@@ -912,6 +914,7 @@ window.EXCEL_TUTORIAL = [
         "A3": 1.234
       },
       "formula": "=SUM(ROUND(A2:A3,2))",
+      "display": "decimal2",
       "output": "B2",
       "rule": {
         "op": "sumRounded",
@@ -2071,7 +2074,7 @@ window.EXCEL_TUTORIAL = [
   {
     "id": "s38",
     "title": "Excel Payroll Model Exercise",
-    "html": "<p>A model needs distinct units: Hours, HourlyRate, Sales and CommissionRate. Keep changing assumptions in labelled cells.</p><h2>Fictional gross amount</h2><p>Eight hours at 25 plus 3% of 1000 is 230. Two more hours should add 50 without changing the commission. Round only at the stage required by the stated rule.</p><p>This example teaches arithmetic. It does not implement Malaysian payroll, statutory deductions, tax, leave or overtime law. Do not use training rates to make real pay decisions.</p>",
+    "html": "<p>A model needs distinct units: Hours, HourlyRate, Sales and CommissionRate. Keep changing assumptions in labelled cells.</p><h2>Fictional gross amount</h2><p>Eight hours at 25 plus 3% of 1000 is 230. Two more hours should add 50 without changing the commission. Round only at the stage required by the stated rule.</p><p>Use non-negative hours in this browser model. It has no negative adjustment or deduction terms. Use a separate real Excel model for those cases.</p><p class=\"note\">Browser boundary: each input and each exact product or sum before rounding must fit 15 significant digits, not 15 decimal places. Even a permitted input can produce an unsupported intermediate. The browser then clears its result and directs you to Excel instead of showing a plausible estimate. Supported outputs retain their cents and are displayed to two decimal places. Native workbook practice is not restricted.</p><p>This example teaches arithmetic. It does not implement Malaysian payroll, statutory deductions, tax, leave or overtime law. Do not use training rates to make real pay decisions.</p>",
     "example": {
       "cells": {
         "A1": "Hours",
@@ -2084,6 +2087,7 @@ window.EXCEL_TUTORIAL = [
         "D2": 0.03
       },
       "formula": "=ROUND(A2*B2+C2*D2,2)",
+      "display": "decimal2",
       "output": "E2",
       "rule": {
         "op": "gross",

@@ -1,0 +1,1597 @@
+{
+  "origin": "Observed original and independently measured synthetic vectors from Microsoft Excel 16.0 build 20527, 19 November 2026. There is overlap between the four measurement sets; these are retained observations, not 105 unique native experiments.",
+  "contract": "Four guided ROUND operations use exact decimals with at most 15 significant digits per input and exact intermediate, raw input at most 400 characters, explicit exponent within +/-1000 and normalised power -324..308. Fictional pay hours must be non-negative. Unsupported outcomes are demo limits, not Excel errors or native numeric passes.",
+  "classification": "Numeric versus unsupported dispositions were fixed using an independent Python Decimal/native comparison before this product implementation. All native matrices remain recorded, including rejected operands.",
+  "vectors": [
+    {
+      "key": "review-round1-s14-0",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "1.235",
+      "nativeStored": 1.235,
+      "native": [
+        [
+          3.71
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s14-1",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "1.237",
+      "nativeStored": 1.237,
+      "native": [
+        [
+          3.71
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s14-2",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "0.345",
+      "nativeStored": 0.345,
+      "native": [
+        [
+          1.04
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s14-3",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "-0.345",
+      "nativeStored": -0.345,
+      "native": [
+        [
+          -1.04
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s14-4",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "0.335",
+      "nativeStored": 0.335,
+      "native": [
+        [
+          1.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s14-5",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "0.349999999999999",
+      "nativeStored": 0.349999999999999,
+      "native": [
+        [
+          1.05
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s14-6",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "1.005",
+      "nativeStored": 1.005,
+      "native": [
+        [
+          3.02
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s14-7",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "999999999.995",
+      "nativeStored": 999999999.995,
+      "native": [
+        [
+          2999999999.99
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-0",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.2",
+      "nativeStored": 0.2,
+      "native": [
+        [
+          10,
+          40
+        ],
+        [
+          30,
+          80
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-1",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.25",
+      "nativeStored": 0.25,
+      "native": [
+        [
+          10,
+          50
+        ],
+        [
+          30,
+          100
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-2",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.200025",
+      "nativeStored": 0.200025,
+      "native": [
+        [
+          10,
+          40.01
+        ],
+        [
+          30,
+          80.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-3",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.200024999999999",
+      "nativeStored": 0.200024999999999,
+      "native": [
+        [
+          10,
+          40
+        ],
+        [
+          30,
+          80.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-4",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "-0.200025",
+      "nativeStored": -0.200025,
+      "native": [
+        [
+          10,
+          -40.01
+        ],
+        [
+          30,
+          -80.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-5",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.010025",
+      "nativeStored": 0.010025,
+      "native": [
+        [
+          10,
+          2.01
+        ],
+        [
+          30,
+          4.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-6",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.0100125",
+      "nativeStored": 0.0100125,
+      "native": [
+        [
+          10,
+          2
+        ],
+        [
+          30,
+          4.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s15-7",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.5000375",
+      "nativeStored": 0.5000375,
+      "native": [
+        [
+          10,
+          100.01
+        ],
+        [
+          30,
+          200.02
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-0",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1.234",
+      "nativeStored": 1.234,
+      "native": [
+        [
+          2.46
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-1",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1.236",
+      "nativeStored": 1.236,
+      "native": [
+        [
+          2.4699999999999998
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-2",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1.2349999999995",
+      "nativeStored": 1.2349999999995,
+      "native": [
+        [
+          2.46
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-3",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1.235",
+      "nativeStored": 1.235,
+      "native": [
+        [
+          2.4699999999999998
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-4",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "-1.235",
+      "nativeStored": -1.235,
+      "native": [
+        [
+          -0.010000000000000009
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-5",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "-1.2349999999995",
+      "nativeStored": -1.2349999999995,
+      "native": [
+        [
+          0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-6",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "0.005",
+      "nativeStored": 0.005,
+      "native": [
+        [
+          1.24
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-7",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "-0.005",
+      "nativeStored": -0.005,
+      "native": [
+        [
+          1.22
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-8",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "2.675",
+      "nativeStored": 2.675,
+      "native": [
+        [
+          3.91
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-9",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "2.6749999999999994",
+      "nativeStored": 2.6749999999999994,
+      "native": [
+        [
+          3.91
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s16-10",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "2.674999999999999",
+      "nativeStored": 2.674999999999999,
+      "native": [
+        [
+          3.91
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s16-11",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "2.6749999999999985",
+      "nativeStored": 2.6749999999999985,
+      "native": [
+        [
+          3.91
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s16-12",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "0.995",
+      "nativeStored": 0.995,
+      "native": [
+        [
+          2.23
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-13",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "0.9949999999999998",
+      "nativeStored": 0.9949999999999998,
+      "native": [
+        [
+          2.23
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s16-14",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "0.9949999999999997",
+      "nativeStored": 0.9949999999999996,
+      "native": [
+        [
+          2.23
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s16-15",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "100.005",
+      "nativeStored": 100.005,
+      "native": [
+        [
+          101.24000000000001
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s16-16",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "100.00499999999997",
+      "nativeStored": 100.00499999999997,
+      "native": [
+        [
+          101.24000000000001
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s16-17",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "100.00499999999995",
+      "nativeStored": 100.00499999999997,
+      "native": [
+        [
+          101.24000000000001
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s36-0",
+      "kind": "lesson",
+      "id": "s36",
+      "cell": "A5",
+      "raw": "Chen",
+      "nativeStored": "Chen",
+      "native": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ],
+        [
+          "Chen"
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s36-1",
+      "kind": "lesson",
+      "id": "s36",
+      "cell": "A5",
+      "raw": "Bo",
+      "nativeStored": "Bo",
+      "native": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s36-2",
+      "kind": "lesson",
+      "id": "s36",
+      "cell": "A5",
+      "raw": "",
+      "nativeStored": null,
+      "native": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ],
+        [
+          0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s36-3",
+      "kind": "lesson",
+      "id": "s36",
+      "cell": "A5",
+      "raw": "BO",
+      "nativeStored": "BO",
+      "native": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s36-4",
+      "kind": "lesson",
+      "id": "s36",
+      "cell": "A5",
+      "raw": "Ari",
+      "nativeStored": "Ari",
+      "native": [
+        [
+          "Ali"
+        ],
+        [
+          "Ari"
+        ],
+        [
+          "Bo"
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s36-5",
+      "kind": "lesson",
+      "id": "s36",
+      "cell": "A5",
+      "raw": "Zoe",
+      "nativeStored": "Zoe",
+      "native": [
+        [
+          "Ali"
+        ],
+        [
+          "Bo"
+        ],
+        [
+          "Zoe"
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-0",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "8",
+      "nativeStored": 8,
+      "native": [
+        [
+          230
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-1",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "10",
+      "nativeStored": 10,
+      "native": [
+        [
+          280
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-2",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "8.0002",
+      "nativeStored": 8.0002,
+      "native": [
+        [
+          230.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-3",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "8.00019999999999",
+      "nativeStored": 8.00019999999999,
+      "native": [
+        [
+          230.01
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-round1-s38-4",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "7.9998",
+      "nativeStored": 7.9998,
+      "native": [
+        [
+          230
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-5",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "0.0002",
+      "nativeStored": 0.0002,
+      "native": [
+        [
+          30.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-6",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "0.0018",
+      "nativeStored": 0.0018,
+      "native": [
+        [
+          30.05
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-round1-s38-7",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-0.0002",
+      "nativeStored": -0.0002,
+      "native": [
+        [
+          30
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-round1-s38-8",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "12.125",
+      "nativeStored": 12.125,
+      "native": [
+        [
+          333.13
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-0",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "1.235",
+      "nativeStored": "1.235",
+      "native": [
+        [
+          3.71
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-1",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "1.2349999999995",
+      "nativeStored": "1.2349999999995",
+      "native": [
+        [
+          3.7
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-2",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "100000000",
+      "nativeStored": "100000000",
+      "native": [
+        [
+          300000000.0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-3",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "999999999.99997",
+      "nativeStored": "999999999.99997",
+      "native": [
+        [
+          3000000000.0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-4",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "1e-7",
+      "nativeStored": "1E-7",
+      "native": [
+        [
+          0.0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-5",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "0.335",
+      "nativeStored": "0.335",
+      "native": [
+        [
+          1.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s14-6",
+      "kind": "lesson",
+      "id": "s14",
+      "cell": "B2",
+      "raw": "-0.335",
+      "nativeStored": "-0.335",
+      "native": [
+        [
+          -1.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-0",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "999999999.999975",
+      "nativeStored": "999999999.999975",
+      "native": [
+        [
+          10.0,
+          200000000000.0
+        ],
+        [
+          30.0,
+          399999999999.99
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-1",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "999999999.99995",
+      "nativeStored": "999999999.99995",
+      "native": [
+        [
+          10.0,
+          199999999999.99
+        ],
+        [
+          30.0,
+          399999999999.98
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-2",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "-999999999.999975",
+      "nativeStored": "-999999999.999975",
+      "native": [
+        [
+          10.0,
+          -200000000000.0
+        ],
+        [
+          30.0,
+          -399999999999.99
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-3",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.200025",
+      "nativeStored": "0.200025",
+      "native": [
+        [
+          10.0,
+          40.01
+        ],
+        [
+          30.0,
+          80.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-4",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "0.200024999999999",
+      "nativeStored": "0.200024999999999",
+      "native": [
+        [
+          10.0,
+          40.0
+        ],
+        [
+          30.0,
+          80.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-5",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "9.9999999999999e8",
+      "nativeStored": "999999999.99999",
+      "native": [
+        [
+          10.0,
+          200000000000.0
+        ],
+        [
+          30.0,
+          400000000000.0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s15-6",
+      "kind": "lesson",
+      "id": "s15",
+      "cell": "B6",
+      "raw": "1.00000000000001e-6",
+      "nativeStored": "0.00000100000000000001",
+      "native": [
+        [
+          10.0,
+          0.0
+        ],
+        [
+          30.0,
+          0.0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-0",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1.2349999999995",
+      "nativeStored": "1.2349999999995",
+      "native": [
+        [
+          2.46
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-1",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1.235",
+      "nativeStored": "1.235",
+      "native": [
+        [
+          2.4699999999999998
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-2",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "-1.235",
+      "nativeStored": "-1.235",
+      "native": [
+        [
+          -0.010000000000000009
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-3",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "2.674999999999999",
+      "nativeStored": "2.6749999999999989",
+      "native": [
+        [
+          3.91
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-design-s16-4",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "100.00499999999997",
+      "nativeStored": "100.00499999999997",
+      "native": [
+        [
+          101.24000000000001
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-design-s16-5",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "999999999.999995",
+      "nativeStored": "999999999.999995",
+      "native": [
+        [
+          1000000001.23
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-6",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "9.995e-3",
+      "nativeStored": "0.009995",
+      "native": [
+        [
+          1.24
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-7",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "-9.995e-3",
+      "nativeStored": "-0.009995",
+      "native": [
+        [
+          1.22
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s16-8",
+      "kind": "lesson",
+      "id": "s16",
+      "cell": "A3",
+      "raw": "1e-40",
+      "nativeStored": "1E-40",
+      "native": [
+        [
+          1.23
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s38-0",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "999999999.9996",
+      "nativeStored": "999999999.9996",
+      "native": [
+        [
+          25000000029.99
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s38-1",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-999999999.9996",
+      "nativeStored": "-999999999.9996",
+      "native": [
+        [
+          -24999999969.99
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-design-s38-2",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "8.00019999999999",
+      "nativeStored": "8.00019999999999",
+      "native": [
+        [
+          230.01
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-design-s38-3",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "8.0002",
+      "nativeStored": "8.0002",
+      "native": [
+        [
+          230.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s38-4",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.2",
+      "nativeStored": "-1.2",
+      "native": [
+        [
+          0.0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-design-s38-5",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.2002",
+      "nativeStored": "-1.2002",
+      "native": [
+        [
+          0.0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-design-s38-6",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "1e-14",
+      "nativeStored": "1E-14",
+      "native": [
+        [
+          30.0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "review-design-s38-7",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "1e-9",
+      "nativeStored": "1E-9",
+      "native": [
+        [
+          30.0
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-design-s38-8",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "1e-40",
+      "nativeStored": "1E-40",
+      "native": [
+        [
+          30.0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-boundaries.json-product-low-binary",
+      "kind": "product",
+      "a": "0.7",
+      "b": "0.05",
+      "nativeStored": "0.7",
+      "native": [
+        [
+          0.04
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-boundaries.json-product-negative",
+      "kind": "product",
+      "a": "-0.7",
+      "b": "0.05",
+      "nativeStored": "-0.7",
+      "native": [
+        [
+          -0.04
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-boundaries.json-decimal-tie",
+      "kind": "product",
+      "a": "1.005",
+      "b": "1",
+      "nativeStored": "1.005",
+      "native": [
+        [
+          1.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-boundaries.json-decimal-negative-tie",
+      "kind": "product",
+      "a": "-1.235",
+      "b": "1",
+      "nativeStored": "-1.235",
+      "native": [
+        [
+          -1.24
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-boundaries.json-fifteen-digit-below",
+      "kind": "product",
+      "a": "1.23499999999995",
+      "b": "1",
+      "nativeStored": "1.23499999999995",
+      "native": [
+        [
+          1.23
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-boundaries.json-sixteen-digit-below",
+      "kind": "product",
+      "a": "1.234999999999995",
+      "b": "1",
+      "nativeStored": "1.234999999999995",
+      "native": [
+        [
+          1.23
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-boundaries.json-sixteen-digit-above",
+      "kind": "product",
+      "a": "1.235000000000005",
+      "b": "1",
+      "nativeStored": "1.235000000000005",
+      "native": [
+        [
+          1.24
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-boundaries.json-large-integral",
+      "kind": "product",
+      "a": "1e+20",
+      "b": "1",
+      "nativeStored": "1E+20",
+      "native": [
+        [
+          1e+20
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-nextfloat.json-next-below-1235",
+      "kind": "product",
+      "a": "1.2349999999999999",
+      "b": "1",
+      "nativeStored": "1.2349999999999999",
+      "native": [
+        [
+          1.24
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-nextfloat.json-two-below-1235",
+      "kind": "product",
+      "a": "1.2349999999999997",
+      "b": "1",
+      "nativeStored": "1.2349999999999997",
+      "native": [
+        [
+          1.24
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-nextfloat.json-next-below-1005",
+      "kind": "product",
+      "a": "1.0049999999999997",
+      "b": "1",
+      "nativeStored": "1.0049999999999997",
+      "native": [
+        [
+          1.01
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-nextfloat.json-direct-low-product",
+      "kind": "product",
+      "a": "0.034999999999999996",
+      "b": "1",
+      "nativeStored": "0.034999999999999996",
+      "native": [
+        [
+          0.04
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-nextfloat.json-direct-further-low",
+      "kind": "product",
+      "a": "0.03499999999999999",
+      "b": "1",
+      "nativeStored": "0.034999999999999989",
+      "native": [
+        [
+          0.04
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "precision"
+    },
+    {
+      "key": "owner-round-nextfloat.json-direct-above",
+      "kind": "product",
+      "a": "0.035",
+      "b": "1",
+      "nativeStored": "0.035",
+      "native": [
+        [
+          0.04
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "owner-round-nextfloat.json-direct-decimal-tie",
+      "kind": "product",
+      "a": "1.005",
+      "b": "1",
+      "nativeStored": "1.005",
+      "native": [
+        [
+          1.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-cancellation-0",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.2002",
+      "nativeStored": -1.2002,
+      "native": [
+        [
+          0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-cancellation-1",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.1998",
+      "nativeStored": -1.1998,
+      "native": [
+        [
+          0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-cancellation-2",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.2006",
+      "nativeStored": -1.2006,
+      "native": [
+        [
+          -0.01
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-cancellation-3",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.1994",
+      "nativeStored": -1.1994,
+      "native": [
+        [
+          0.02
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-cancellation-4",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "-1.2",
+      "nativeStored": -1.2,
+      "native": [
+        [
+          0
+        ]
+      ],
+      "disposition": "unsupported",
+      "reason": "negative-hours"
+    },
+    {
+      "key": "review-cancellation-5",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "0.0002",
+      "nativeStored": 0.0002,
+      "native": [
+        [
+          30.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-cancellation-6",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "0.0006",
+      "nativeStored": 0.0006,
+      "native": [
+        [
+          30.02
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-cancellation-7",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "1.0002",
+      "nativeStored": 1.0002,
+      "native": [
+        [
+          55.01
+        ]
+      ],
+      "disposition": "numeric"
+    },
+    {
+      "key": "review-cancellation-8",
+      "kind": "lesson",
+      "id": "s38",
+      "cell": "A2",
+      "raw": "8.0002",
+      "nativeStored": 8.0002,
+      "native": [
+        [
+          230.01
+        ]
+      ],
+      "disposition": "numeric"
+    }
+  ]
+}

@@ -3,7 +3,9 @@
 ## 1.0.1
 
 - Correct the UNIQUE/SORT demo when an editable source name is cleared: the blank sorts last and spills as numeric zero, as in native Excel. Explain that result before the learner builds a dropdown.
-- Replace the fixed rounding bias with magnitude-scaled binary-noise handling. Preserve below-tie values, decimal ties, negative products and large integral inputs; add native-measured boundary regressions.
+- Replace epsilon-based rounding with a checked exact-decimal subset for the four guided ROUND examples. Retain all prescribed numeric results and original supported below-tie controls; explicitly reject unsupported precision or scale instead of showing a plausible false value.
+- Preserve raw decimal input before Number coercion, bound parser length and scale, and keep all 105 observed regression rows with numeric versus unsupported dispositions. The fictional pay browser model requires non-negative hours; native workbook practice remains unrestricted.
+- Display the four ROUND examples to two decimal places so large supported results retain their cents. Add real error/clear/reset/retry and large-cent checks at three viewports.
 - Teach a complete disposable request-report experiment: copy both files, explicitly rebind only the copied query, change R006 in the copied CSV, refresh in order and check the loaded row, department totals and unchanged originals.
 - Preserve keyboard focus on a visible topic link during another tab's progress update. Add real two-tab regressions at desktop, tablet and phone widths.
 - Keep the published 1.0.0 tag and assets unchanged. Candidate and release acceptance are separate; consult versioned release notes for the actual judgement and evidence limits.

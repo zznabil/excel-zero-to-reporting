@@ -113,7 +113,7 @@
     }table.append(body);
   }
   function run(){
-    try{for(const input of $('example-sheet').querySelectorAll('input')){if(input.type==='number'){const n=Number(input.value);if(input.value.trim()===''||!Number.isFinite(n)||Math.abs(n)>1e9)throw Error(`Enter a number between -1000000000 and 1000000000 in ${input.dataset.input}.`);cells[input.dataset.input]=n;}else cells[input.dataset.input]=input.value;}
+    try{for(const input of $('example-sheet').querySelectorAll('input'))cells[input.dataset.input]=demos.inputValue(current.example,input.dataset.input,input.value);
       const result=demos.calculate(current.example,cells);renderExample(result);$('example-status').className='';$('example-status').textContent=`Calculated in ${current.example.output}${result.length>1||result[0].length>1?' and its spilled cells':''}. Change an input to explore the rule.`;
     }catch(error){$('example-status').className='error';$('example-status').textContent=error.message;for(const out of $('example-sheet').querySelectorAll('.output'))out.textContent='—';}
   }

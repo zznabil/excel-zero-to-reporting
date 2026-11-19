@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import {loadCourse,root} from './plan.mjs';
 const {lessons,demos}=loadCourse();
 const oracle=JSON.parse(fs.readFileSync(path.join(root,'tests/excel-oracle.json'),'utf8'));
+const edgeOracle=JSON.parse(fs.readFileSync(path.join(root,'tests/native-edge-oracle.json'),'utf8'));
 const plain=x=>JSON.parse(JSON.stringify(x));
 function compare(actual,expected){
   assert.equal(actual.length,expected.length);
@@ -35,14 +36,24 @@ test('a cleared UNIQUE source spills numeric zero after the populated names',()=
   assert.deepEqual(plain(demos.calculate(e,{...e.cells,A5:''})),[['Ali'],['Bo'],[0]]);
   assert.deepEqual(plain(demos.calculate(e,{...e.cells,A5:'Bo'})),[['Ali'],['Bo']]);
 });
-test('native-measured rounding distinguishes near ties from binary product noise',()=>{
+test('retained native observations match numeric results or the explicit guided boundary',()=>{
   const invoice=lessons.find(l=>l.id==='s16').example;
   for(const [value,total]of [[1.234,2.46],[1.2349999999995,2.46],[1.235,2.47]])compare(demos.calculate(invoice,{...invoice.cells,A3:value}),[[total]]);
-  const product=lessons.find(l=>l.id==='s14').example;
-  // Independently measured in Excel16.0.20527: direct cells and ROUND(A2*B2,2).
-  for(const [a,b,result]of [[0.7,0.05,0.04],[-0.7,0.05,-0.04],[1.005,1,1.01],[-1.235,1,-1.24],[1.23499999999995,1,1.23],[1.234999999999995,1,1.23],[1.235000000000005,1,1.24],[1e20,1,1e20],[1.2349999999999999,1,1.24],[1.2349999999999997,1,1.24],[1.0049999999999997,1,1.01],[0.034999999999999996,1,0.04],[0.03499999999999999,1,0.04]]){
-    compare(demos.calculate(product,{...product.cells,A2:a,B2:b}),[[result]]);
+  assert.equal(edgeOracle.vectors.length,105,'Keep the complete, fixed native-observation corpus; rejected operands are not deleted.');
+  for(const vector of edgeOracle.vectors){
+    const example=lessons.find(l=>l.id===(vector.kind==='product'?'s14':vector.id)).example;
+    const cells=vector.kind==='product'?{...example.cells,A2:Number(vector.a),B2:Number(vector.b)}:{...example.cells,[vector.cell]:typeof example.cells[vector.cell]==='number'?Number(vector.raw):vector.raw};
+    if(vector.disposition==='numeric')compare(demos.calculate(example,cells),vector.native);
+    else assert.throws(()=>demos.calculate(example,cells),vector.reason==='negative-hours'?/non-negative hours/:/Guided ROUND limit/,vector.key);
   }
+});
+test('rounding preserves raw decimal meaning and rejects oversized scales before calculation',()=>{
+  const example=lessons.find(l=>l.id==='s16').example;
+  const calculate=text=>demos.calculate(example,{...example.cells,A3:demos.inputValue(example,'A3',text)});
+  for(const text of ['1.2300','+01.2300','123e-2'])compare(calculate(text),[[2.46]]);
+  for(const text of ['0','-0','-0.0000e-10'])compare(calculate(text),[[1.23]]);
+  for(const text of ['1.2349999999999999999','1e-10000000','1e-400','0'.repeat(401)+'1'])assert.throws(()=>calculate(text),/Guided ROUND limit/);
+  compare(calculate('1.2349999999995'),[[2.46]]);compare(calculate('1.235'),[[2.47]]);
 });
 test('no-match, missing delimiter, non-numeric text and zero denominators remain distinct',()=>{
   const filter=lessons.find(l=>l.id==='s28').example;compare(demos.calculate(filter,{...filter.cells,E2:'Absent'}),[['No matches']]);

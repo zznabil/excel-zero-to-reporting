@@ -35,6 +35,7 @@
   "tests/native-import.ps1",
   "tests/GUI-IMPORT.md",
   "tests/excel-oracle.json",
+  "tests/native-edge-oracle.json",
   "tests/project-oracle.json",
   "tests/import-oracle.json",
   "tools/__init__.py",
